@@ -1,7 +1,7 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sendApplicationReceived } from "@/lib/email";
+import { sendApplicationReceived, sendAdminNewLead } from "@/lib/email";
 
 export type RegisterState = { ok?: boolean; error?: string };
 
@@ -44,8 +44,11 @@ export async function submitLead(
     return { error: "Có lỗi khi gửi đăng ký, vui lòng thử lại sau." };
   }
 
-  // Gửi email xác nhận (không chặn luồng nếu email lỗi)
-  await sendApplicationReceived({ full_name, email: email || null, cohort });
+  // Gửi email xác nhận cho học viên + báo cho admin (không chặn luồng nếu email lỗi)
+  await Promise.all([
+    sendApplicationReceived({ full_name, email: email || null, cohort }),
+    sendAdminNewLead({ full_name, email: email || null, phone: phone || null, cohort, note: note || null }),
+  ]);
 
   return { ok: true };
 }

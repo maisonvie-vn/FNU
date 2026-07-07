@@ -4,6 +4,7 @@ const KEY = process.env.RESEND_API_KEY;
 const FROM =
   process.env.RESEND_FROM || "Food Culture & Aesthetic <onboarding@resend.dev>";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fnu-vatel.vercel.app";
+const ADMIN_EMAIL = process.env.ADMIN_NOTIFY_EMAIL || "vcf.thanhmr@gmail.com";
 
 function formatVND(n: number) {
   return new Intl.NumberFormat("vi-VN").format(n) + "₫";
@@ -91,4 +92,61 @@ export async function sendApplicationApproved(
      </p>`,
   );
   await send(lead.email, "Hồ sơ đã được duyệt · Food Culture & Aesthetic", html);
+}
+
+// Báo cho admin khi có đơn ghi danh mới (không phụ thuộc email học viên)
+export async function sendAdminNewLead(
+  lead: LeadLike & { phone?: string | null; note?: string | null },
+) {
+  const rows = [
+    ["Họ tên · Name", lead.full_name],
+    ["Email", lead.email || "—"],
+    ["Điện thoại · Phone", lead.phone || "—"],
+    ["Khóa đăng ký · Cohort", lead.cohort || "—"],
+  ];
+  if (lead.note) rows.push(["Ghi chú · Note", lead.note]);
+
+  const rowsHtml = rows
+    .map(
+      ([k, v]) =>
+        `<tr><td style="padding:6px 12px 6px 0;color:#96A8A1;font-size:13px;white-space:nowrap">${k}</td><td style="padding:6px 0;color:#FBF8F4;font-size:14px">${v}</td></tr>`,
+    )
+    .join("");
+
+  const html = wrap(
+    "Có đơn ghi danh mới",
+    `<table style="border-collapse:collapse;margin-bottom:20px">${rowsHtml}</table>
+     <a href="${SITE_URL}/app/leads" style="display:inline-block;background:#A8884E;color:#042726;padding:12px 24px;border-radius:8px;font-size:13px;font-weight:bold;text-decoration:none;letter-spacing:0.08em">Xem &amp; duyệt hồ sơ · Review →</a>
+     <p style="color:#96A8A1;font-size:12px;line-height:1.6;margin-top:20px">
+       A new registration was just submitted on the landing page — open the admin panel to review and approve it.
+     </p>`,
+  );
+  await send(ADMIN_EMAIL, `Đơn ghi danh mới · ${lead.full_name}`, html);
+}
+
+// Gửi cho học viên khi GV xác nhận đã nhận thanh toán
+export async function sendPaymentConfirmed(payment: {
+  full_name: string;
+  email?: string | null;
+  amount: number;
+  transferCode: string;
+}) {
+  if (!payment.email) return;
+  const html = wrap(
+    "Đã xác nhận thanh toán học phí",
+    `<p style="color:#D5DFDA;font-size:15px;line-height:1.7">
+       Chào <b style="color:#FBF8F4">${payment.full_name}</b>,<br><br>
+       Chúng tôi xác nhận đã nhận được khoản thanh toán học phí của bạn. Chỗ học của bạn tại
+       <b style="color:#C9A24A">Food Culture &amp; Aesthetic</b> đã được xác nhận.
+     </p>
+     <div style="margin-top:20px;padding:18px 20px;border:1px solid rgba(168,136,78,0.5);border-radius:10px;background:#102B2A">
+       <div style="font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:#C9A24A;margin-bottom:6px">Số tiền · Amount</div>
+       <div style="font-family:Georgia,serif;font-size:24px;color:#FBF8F4">${formatVND(payment.amount)}</div>
+       <div style="font-size:12px;color:#96A8A1;margin-top:8px">Mã tham chiếu · Reference: <span style="color:#D5DFDA;font-family:monospace">${payment.transferCode}</span></div>
+     </div>
+     <p style="color:#96A8A1;font-size:13px;line-height:1.6;margin-top:18px">
+       We confirm your tuition payment has been received. Your seat is now fully confirmed. Thank you!
+     </p>`,
+  );
+  await send(payment.email, "Đã xác nhận thanh toán · Food Culture & Aesthetic", html);
 }

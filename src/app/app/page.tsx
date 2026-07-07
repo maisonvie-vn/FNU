@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "../login/actions";
@@ -19,7 +20,15 @@ export default async function AppPage() {
       <div className="flex items-center justify-between border-b border-gold/20 bg-ink-deep px-4 py-2">
         <span className="eyebrow">Food Culture &amp; Aesthetic · CRM</span>
         <div className="flex items-center gap-3 text-sm">
-          <span className="text-sage">dữ liệu mẫu · sample data</span>
+          <Link
+            href="/app/leads"
+            className="h-8 rounded-md bg-gold px-3 font-semibold leading-8 text-ink transition hover:bg-gold-soft"
+          >
+            Ghi danh (dữ liệu thật) →
+          </Link>
+          <span className="hidden text-sage sm:inline">
+            màn hình khác: dữ liệu mẫu
+          </span>
           <form action={logout}>
             <button className="h-8 rounded-md border border-gold/30 px-3 text-mist transition hover:border-gold hover:text-gold">
               Đăng xuất

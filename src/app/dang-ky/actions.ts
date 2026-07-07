@@ -1,0 +1,40 @@
+"use server";
+
+import { createAdminClient } from "@/lib/supabase/admin";
+
+export type RegisterState = { ok?: boolean; error?: string };
+
+// Nhận đơn đăng ký từ trang công khai (không đăng nhập).
+// Dùng service role ở SERVER để ghi vào bảng leads — RLS vẫn khóa,
+// khách chỉ có thể gửi qua action đã kiểm soát này, không đọc/sửa được gì.
+export async function submitLead(
+  _prev: RegisterState,
+  formData: FormData,
+): Promise<RegisterState> {
+  const full_name = String(formData.get("full_name") || "").trim();
+  const email = String(formData.get("email") || "").trim();
+  const phone = String(formData.get("phone") || "").trim();
+  const note = String(formData.get("note") || "").trim();
+  const cohort = String(formData.get("cohort") || "F-NU-10").trim();
+
+  if (!full_name) return { error: "Vui lòng nhập họ và tên." };
+  if (!email && !phone)
+    return { error: "Vui lòng nhập ít nhất email hoặc số điện thoại." };
+  if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
+    return { error: "Email không hợp lệ." };
+
+  const admin = createAdminClient();
+  const { error } = await admin.from("leads").insert({
+    full_name,
+    email: email || null,
+    phone: phone || null,
+    note: note || null,
+    cohort,
+    status: "pending",
+  });
+
+  if (error) {
+    return { error: "Có lỗi khi gửi đăng ký, vui lòng thử lại sau." };
+  }
+  return { ok: true };
+}

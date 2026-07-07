@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { sendApplicationApproved } from "@/lib/email";
+import { COURSE_FEE_VND } from "@/lib/vietqr";
 
 async function requireStaff() {
   const supabase = await createClient();
@@ -40,21 +41,41 @@ export async function approveLead(formData: FormData) {
     .select("id")
     .single();
 
+  // Mã chuyển khoản duy nhất để đối soát (ghi trong nội dung CK)
+  const transferCode =
+    "FNU10" + Date.now().toString(36).slice(-6).toUpperCase();
+
   if (student) {
-    await supabase.from("enrollments").insert({
-      student_id: student.id,
-      lead_id: id,
-      cohort: lead.cohort || "F-NU-10",
-    });
+    const { data: enr } = await supabase
+      .from("enrollments")
+      .insert({
+        student_id: student.id,
+        lead_id: id,
+        cohort: lead.cohort || "F-NU-10",
+      })
+      .select("id")
+      .single();
+
+    // Tạo bản ghi thanh toán học phí (chờ thanh toán)
+    if (enr) {
+      await supabase.from("payments").insert({
+        enrollment_id: enr.id,
+        amount: COURSE_FEE_VND,
+        transfer_code: transferCode,
+        status: "pending",
+      });
+    }
   }
 
   await supabase.from("leads").update({ status: "approved" }).eq("id", id);
 
-  // Gửi email báo duyệt (không chặn nếu lỗi)
+  // Gửi email báo duyệt kèm link thanh toán (không chặn nếu lỗi)
   await sendApplicationApproved({
     full_name: lead.full_name,
     email: lead.email,
     cohort: lead.cohort,
+    paymentCode: transferCode,
+    amount: COURSE_FEE_VND,
   });
 
   revalidatePath("/app/leads");

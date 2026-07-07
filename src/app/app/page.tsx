@@ -24,6 +24,7 @@ export default async function AppPage() {
           <Link href="/app/leads" className="h-8 rounded-md bg-gold px-3 font-semibold leading-8 text-ink transition hover:bg-gold-soft">Ghi danh</Link>
           <Link href="/app/gradebook" className="h-8 rounded-md border border-gold/40 px-3 leading-8 text-gold transition hover:bg-gold hover:text-ink">Bảng điểm</Link>
           <Link href="/app/attendance" className="h-8 rounded-md border border-gold/40 px-3 leading-8 text-gold transition hover:bg-gold hover:text-ink">Điểm danh</Link>
+          <Link href="/app/payments" className="h-8 rounded-md border border-gold/40 px-3 leading-8 text-gold transition hover:bg-gold hover:text-ink">Thanh toán</Link>
           <form action={logout}>
             <button className="h-8 rounded-md border border-gold/30 px-3 text-mist transition hover:border-gold hover:text-gold">
               Đăng xuất

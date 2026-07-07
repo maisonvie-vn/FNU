@@ -3,6 +3,11 @@ import { Resend } from "resend";
 const KEY = process.env.RESEND_API_KEY;
 const FROM =
   process.env.RESEND_FROM || "Food Culture & Aesthetic <onboarding@resend.dev>";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fnu-vatel.vercel.app";
+
+function formatVND(n: number) {
+  return new Intl.NumberFormat("vi-VN").format(n) + "₫";
+}
 
 // Bọc khung email theo nhận diện thương hiệu (xanh rêu + gold)
 function wrap(title: string, bodyHtml: string) {
@@ -60,19 +65,29 @@ export async function sendApplicationReceived(lead: LeadLike) {
   await send(lead.email, "Đã nhận hồ sơ · Food Culture & Aesthetic", html);
 }
 
-// Gửi khi đơn được duyệt
-export async function sendApplicationApproved(lead: LeadLike) {
+// Gửi khi đơn được duyệt (kèm link thanh toán học phí nếu có)
+export async function sendApplicationApproved(
+  lead: LeadLike & { paymentCode?: string; amount?: number },
+) {
   if (!lead.email) return;
+  const payBlock =
+    lead.paymentCode && lead.amount
+      ? `<div style="margin-top:24px;padding:20px;border:1px solid rgba(168,136,78,0.5);border-radius:10px;background:#102B2A">
+           <div style="font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:#C9A24A;margin-bottom:8px">Học phí · Tuition</div>
+           <div style="font-family:Georgia,serif;font-size:26px;color:#FBF8F4">${formatVND(lead.amount)}</div>
+           <a href="${SITE_URL}/thanh-toan/${lead.paymentCode}" style="display:inline-block;margin-top:14px;background:#A8884E;color:#042726;padding:12px 24px;border-radius:8px;font-size:13px;font-weight:bold;text-decoration:none;letter-spacing:0.08em">Thanh toán học phí · Pay tuition →</a>
+         </div>`
+      : "";
   const html = wrap(
     "Chúc mừng — hồ sơ đã được duyệt!",
     `<p style="color:#D5DFDA;font-size:15px;line-height:1.7">
        Chào <b style="color:#FBF8F4">${lead.full_name}</b>,<br><br>
        Hồ sơ của bạn đã được <b style="color:#7FB595">DUYỆT</b>. Bạn đã chính thức trở thành
        sinh viên của học phần <b style="color:#C9A24A">Food Culture &amp; Aesthetic</b>${lead.cohort ? ` — khóa <b>${lead.cohort}</b>` : ""}.
-       <br><br>Thông tin về cổng học tập và lịch học sẽ được gửi trong email tiếp theo.
      </p>
+     ${payBlock}
      <p style="color:#96A8A1;font-size:13px;line-height:1.6;margin-top:18px">
-       Congratulations! Your application has been approved. Welcome to the course.
+       Congratulations! Your application has been approved. Please complete the tuition payment to confirm your seat.
      </p>`,
   );
   await send(lead.email, "Hồ sơ đã được duyệt · Food Culture & Aesthetic", html);

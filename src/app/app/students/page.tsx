@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatVND } from "@/lib/vietqr";
+import { MoveCohortForm, WithdrawButton, ReactivateButton } from "./RowActions";
 
 export const metadata = { title: "Danh sách học viên · Food Culture & Aesthetic" };
 export const dynamic = "force-dynamic";
@@ -26,9 +27,10 @@ function PayBadge({ payments }: { payments: Row["payments"] }) {
 export default async function StudentsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ cohort?: string }>;
+  searchParams: Promise<{ cohort?: string; show?: string }>;
 }) {
-  const { cohort: cohortFilter } = await searchParams;
+  const { cohort: cohortFilter, show } = await searchParams;
+  const showWithdrawn = show === "withdrawn";
   const supabase = await createClient();
   const {
     data: { user },
@@ -42,9 +44,11 @@ export default async function StudentsPage({
   if (cohortFilter) query = query.eq("cohort", cohortFilter);
 
   const { data, error } = await query;
-  const rows = ((data || []) as unknown as Row[]).filter((r) => r.students);
+  const allRows = ((data || []) as unknown as Row[]).filter((r) => r.students);
+  const withdrawnCount = allRows.filter((r) => r.status === "withdrawn").length;
+  const rows = showWithdrawn ? allRows : allRows.filter((r) => r.status !== "withdrawn");
 
-  const cohorts = [...new Set(rows.map((r) => r.cohort).filter(Boolean))] as string[];
+  const cohorts = [...new Set(allRows.map((r) => r.cohort).filter(Boolean))] as string[];
 
   return (
     <main className="mx-auto w-full max-w-6xl px-6 py-10">
@@ -99,7 +103,7 @@ export default async function StudentsPage({
         </div>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-gold/20">
-          <table className="w-full min-w-[760px] text-sm">
+          <table className="w-full min-w-[980px] text-sm">
             <thead>
               <tr className="border-b border-gold/25 text-left text-xs uppercase tracking-wider text-gold">
                 <th className="px-4 py-3 font-medium">Họ tên</th>
@@ -108,28 +112,64 @@ export default async function StudentsPage({
                 <th className="px-3 py-3 font-medium">SĐT</th>
                 <th className="px-3 py-3 font-medium">Lớp / Khóa</th>
                 <th className="px-3 py-3 font-medium">Học phí</th>
+                <th className="px-3 py-3 font-medium">Hành động</th>
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
-                <tr key={r.id} className="border-b border-gold/10">
-                  <td className="px-4 py-2.5 font-medium text-cream">{r.students?.full_name}</td>
-                  <td className="px-3 py-2.5 font-mono text-xs text-sage">{r.students?.student_code || "—"}</td>
-                  <td className="px-3 py-2.5 text-mist">{r.students?.email || "—"}</td>
-                  <td className="px-3 py-2.5 text-mist">{r.students?.phone || "—"}</td>
-                  <td className="px-3 py-2.5 text-mist">{r.cohort || "—"}</td>
-                  <td className="px-3 py-2.5">
-                    <PayBadge payments={r.payments} />
-                    {r.payments?.[0] && (
-                      <span className="ml-2 text-xs text-sage">{formatVND(r.payments[0].amount)}</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
+              {rows.map((r) => {
+                const withdrawn = r.status === "withdrawn";
+                return (
+                  <tr key={r.id} className={`border-b border-gold/10 ${withdrawn ? "opacity-60" : ""}`}>
+                    <td className="px-4 py-2.5 font-medium text-cream">
+                      {r.students?.full_name}
+                      {withdrawn && (
+                        <span className="ml-2 rounded-full border border-danger/40 px-2 py-0.5 text-[10px] tracking-wide text-danger">ĐÃ NGHỈ</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2.5 font-mono text-xs text-sage">{r.students?.student_code || "—"}</td>
+                    <td className="px-3 py-2.5 text-mist">{r.students?.email || "—"}</td>
+                    <td className="px-3 py-2.5 text-mist">{r.students?.phone || "—"}</td>
+                    <td className="px-3 py-2.5 text-mist">{r.cohort || "—"}</td>
+                    <td className="px-3 py-2.5">
+                      <PayBadge payments={r.payments} />
+                      {r.payments?.[0] && (
+                        <span className="ml-2 text-xs text-sage">{formatVND(r.payments[0].amount)}</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2.5">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {!withdrawn && (
+                          <MoveCohortForm enrollmentId={r.id} currentCohort={r.cohort} knownCohorts={cohorts} />
+                        )}
+                        {withdrawn ? (
+                          <ReactivateButton enrollmentId={r.id} />
+                        ) : (
+                          <WithdrawButton enrollmentId={r.id} studentName={r.students?.full_name || ""} />
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       )}
+
+      <p className="mt-4 text-xs text-sage">
+        {showWithdrawn ? (
+          <Link href={cohortFilter ? `/app/students?cohort=${encodeURIComponent(cohortFilter)}` : "/app/students"} className="text-gold hover:underline">
+            ← Ẩn học viên đã nghỉ
+          </Link>
+        ) : withdrawnCount > 0 ? (
+          <Link
+            href={`/app/students?show=withdrawn${cohortFilter ? `&cohort=${encodeURIComponent(cohortFilter)}` : ""}`}
+            className="text-gold hover:underline"
+          >
+            Xem {withdrawnCount} học viên đã nghỉ / bảo lưu →
+          </Link>
+        ) : null}
+      </p>
     </main>
   );
 }

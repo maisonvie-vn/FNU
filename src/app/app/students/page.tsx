@@ -46,7 +46,9 @@ export default async function StudentsPage({
   const { data, error } = await query;
   const allRows = ((data || []) as unknown as Row[]).filter((r) => r.students);
   const withdrawnCount = allRows.filter((r) => r.status === "withdrawn").length;
-  const rows = showWithdrawn ? allRows : allRows.filter((r) => r.status !== "withdrawn");
+  const rows = showWithdrawn
+    ? allRows.filter((r) => r.status === "withdrawn")
+    : allRows.filter((r) => r.status !== "withdrawn");
 
   const cohorts = [...new Set(allRows.map((r) => r.cohort).filter(Boolean))] as string[];
 
@@ -54,10 +56,18 @@ export default async function StudentsPage({
     <main className="mx-auto w-full max-w-6xl px-6 py-10">
       <header className="mb-8 flex flex-wrap items-start justify-between gap-4 border-b border-gold/20 pb-6">
         <div>
-          <p className="eyebrow">Food Culture &amp; Aesthetic</p>
+          <p className="eyebrow">
+            {showWithdrawn ? "Food Culture & Aesthetic · Đã nghỉ / bảo lưu" : "Food Culture & Aesthetic"}
+          </p>
           <h1 className="mt-1 font-display text-4xl text-cream">
-            Danh sách học viên <span className="text-sage">({rows.length})</span>
+            {showWithdrawn ? "Học viên đã nghỉ / bảo lưu" : "Danh sách học viên"}{" "}
+            <span className="text-sage">({rows.length})</span>
           </h1>
+          {showWithdrawn && (
+            <p className="mt-2 max-w-xl text-sm text-danger/90">
+              ⚠️ Đây KHÔNG phải danh sách lớp chính — những người này đã bị đánh dấu nghỉ nên không tính vào sĩ số. Bấm &quot;Khôi phục&quot; để đưa họ về lại danh sách chính.
+            </p>
+          )}
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <a

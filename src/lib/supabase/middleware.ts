@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Các tiền tố đường dẫn yêu cầu đăng nhập (khu vực CRM của giảng viên)
-const PROTECTED_PREFIXES = ["/dashboard", "/attendance", "/gradebook", "/assessments", "/leads", "/students", "/settings", "/appointments"];
+const PROTECTED_PREFIXES = ["/app", "/dashboard", "/attendance", "/gradebook", "/assessments", "/leads", "/students", "/settings", "/appointments"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -53,7 +53,7 @@ export async function updateSession(request: NextRequest) {
   // Đã đăng nhập mà vào /login → đẩy vào dashboard
   if (path === "/login" && user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = "/app";
     return NextResponse.redirect(url);
   }
 

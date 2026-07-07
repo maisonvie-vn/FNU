@@ -18,7 +18,7 @@ export async function login(
 ): Promise<LoginState> {
   const username = String(formData.get("username") || "").trim();
   const password = String(formData.get("password") || "");
-  const next = String(formData.get("next") || "/dashboard");
+  const next = String(formData.get("next") || "/app");
 
   if (!username || !password) {
     return { error: "Vui lòng nhập tên đăng nhập và mật khẩu." };

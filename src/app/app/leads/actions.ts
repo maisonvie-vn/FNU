@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { sendApplicationApproved } from "@/lib/email";
 
 async function requireStaff() {
   const supabase = await createClient();
@@ -48,6 +49,14 @@ export async function approveLead(formData: FormData) {
   }
 
   await supabase.from("leads").update({ status: "approved" }).eq("id", id);
+
+  // Gửi email báo duyệt (không chặn nếu lỗi)
+  await sendApplicationApproved({
+    full_name: lead.full_name,
+    email: lead.email,
+    cohort: lead.cohort,
+  });
+
   revalidatePath("/app/leads");
 }
 

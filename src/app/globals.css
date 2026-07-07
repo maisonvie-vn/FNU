@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/* ===== Bảng màu thương hiệu "Food Culture & Aesthetic" ===== */
+@theme {
+  --color-ink: #102b2a; /* nền xanh rêu đậm */
+  --color-ink-deep: #042726; /* nền sâu hơn (card) */
+  --color-ink-soft: #0a302e; /* viền/panel */
+  --color-gold: #c9a24a; /* vàng gold nhấn */
+  --color-gold-dim: #a8884e; /* vàng phụ */
+  --color-gold-soft: #e2cd96; /* vàng nhạt */
+  --color-cream: #fbf8f4; /* chữ chính */
+  --color-sage: #96a8a1; /* chữ phụ */
+  --color-mist: #d5dfda; /* chữ phụ sáng */
+  --color-danger: #d98a7e; /* đỏ cảnh báo (đã nâng tương phản cho chữ nhỏ) */
+  --color-success: #7fb595; /* xanh đạt */
+
+  --font-display: var(--font-display), Georgia, serif;
+  --font-body: var(--font-body), system-ui, sans-serif;
+}
+
+html,
+body {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Nhãn small-caps kiểu học thuật */
+.eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}

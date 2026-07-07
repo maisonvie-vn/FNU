@@ -5,7 +5,7 @@ import EnrollForm from "./_landing/EnrollForm";
 export const metadata = {
   title: "Food Culture & Aesthetic — FCA-2026",
   description:
-    "Học phần Food Culture & Aesthetic — Trường ĐH Ngoại thương, Đào tạo Quốc tế. Read culture through food, design the dining experience.",
+    "Học phần Food Culture & Aesthetic. Read culture through food, design the dining experience.",
 };
 
 const DISPLAY = "var(--font-display)";

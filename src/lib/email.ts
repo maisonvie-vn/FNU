@@ -15,14 +15,14 @@ function wrap(title: string, bodyHtml: string) {
     <div style="max-width:520px;margin:0 auto;background:#042726;border:1px solid rgba(168,136,78,0.45);border-radius:14px;overflow:hidden">
       <div style="padding:28px 32px;border-bottom:1px solid rgba(168,136,78,0.4)">
         <div style="font-family:Georgia,serif;font-size:22px;font-weight:600;color:#C9A24A">Food Culture &amp; Aesthetic</div>
-        <div style="font-size:11px;letter-spacing:0.2em;color:#96A8A1;margin-top:4px">FCA-2026 · ĐẠI HỌC NGOẠI THƯƠNG</div>
+        <div style="font-size:11px;letter-spacing:0.2em;color:#96A8A1;margin-top:4px">FCA-2026</div>
       </div>
       <div style="padding:32px">
         <h1 style="font-family:Georgia,serif;font-size:24px;color:#FBF8F4;margin:0 0 16px">${title}</h1>
         ${bodyHtml}
       </div>
       <div style="padding:20px 32px;border-top:1px solid rgba(168,136,78,0.35);font-size:12px;color:#96A8A1">
-        Food Culture &amp; Aesthetic · Chương trình Đào tạo Quốc tế
+        Food Culture &amp; Aesthetic
       </div>
     </div>
   </div>`;

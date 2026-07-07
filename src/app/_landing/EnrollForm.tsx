@@ -65,9 +65,11 @@ export default function EnrollForm() {
       <input name="student_code" placeholder="Student ID / MSSV" style={inputStyle} />
       <input name="email" type="email" required placeholder="Email" style={inputStyle} />
       <input name="phone" type="tel" placeholder="Phone / Số điện thoại" style={inputStyle} />
-      <select name="cohort" defaultValue="FCA-2026-Fall" style={{ ...inputStyle, background: "#102B2A" }}>
-        <option value="FCA-2026-Fall">Fall 2026 cohort · Khóa Thu 2026</option>
-        <option value="FCA-2027-Spring">Spring 2027 cohort · Khóa Xuân 2027</option>
+      <select name="cohort" defaultValue="FCA-2026-Summer" style={{ ...inputStyle, background: "#102B2A" }}>
+        <option value="FCA-2026-Summer">Khóa Mùa hè 2026 · Summer 2026</option>
+        <option value="FCA-2026-Fall">Khóa Mùa thu 2026 · Fall 2026</option>
+        <option value="FCA-2026-Winter">Khóa Mùa đông 2026 · Winter 2026</option>
+        <option value="FCA-2027-Spring">Khóa Mùa xuân 2027 · Spring 2027</option>
       </select>
       {state.error && (
         <div style={{ fontSize: 13, color: "#D98A7E" }}>{state.error}</div>

@@ -51,7 +51,7 @@ export default async function AttendancePage({
     <main className="mx-auto w-full max-w-5xl px-6 py-10">
       <header className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-gold/20 pb-6">
         <div>
-          <p className="eyebrow">Course CRM · F-NU-10</p>
+          <p className="eyebrow">Food Culture &amp; Aesthetic</p>
           <h1 className="mt-1 font-display text-4xl text-cream">Điểm danh</h1>
         </div>
         <div className="flex gap-3">

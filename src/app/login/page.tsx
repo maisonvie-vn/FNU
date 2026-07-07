@@ -14,7 +14,6 @@ export default function LoginPage() {
             <br />
             <span className="italic">&amp; Aesthetic</span>
           </h1>
-          <p className="eyebrow mt-3">Course CRM · F-NU-10</p>
         </div>
 
         <div className="rounded-2xl border border-gold/25 bg-ink-deep/60 p-6 shadow-xl">
@@ -27,9 +26,6 @@ export default function LoginPage() {
           </Suspense>
         </div>
 
-        <p className="mt-6 text-center text-xs text-sage">
-          Trường ĐH Ngoại thương · Đào tạo Quốc tế
-        </p>
       </div>
     </main>
   );

@@ -18,7 +18,7 @@ const body = Source_Sans_3({
 
 export const metadata: Metadata = {
   title: "Food Culture & Aesthetic — Course CRM",
-  description: "Hệ thống quản lý học phần F-NU-10 · ĐH Ngoại thương",
+  description: "Food Culture & Aesthetic — hệ thống quản lý học phần",
 };
 
 export default function RootLayout({

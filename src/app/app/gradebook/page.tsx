@@ -117,7 +117,7 @@ function Header({ count }: { count: number }) {
   return (
     <header className="mb-8 flex flex-wrap items-start justify-between gap-4 border-b border-gold/20 pb-6">
       <div>
-        <p className="eyebrow">Course CRM · F-NU-10</p>
+        <p className="eyebrow">Food Culture &amp; Aesthetic</p>
         <h1 className="mt-1 font-display text-4xl text-cream">Bảng điểm <span className="text-sage">({count} sinh viên)</span></h1>
       </div>
       <div className="flex gap-3">

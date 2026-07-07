@@ -1,10 +1,23 @@
 import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
 const KEY = process.env.RESEND_API_KEY;
 const FROM =
   process.env.RESEND_FROM || "Food Culture & Aesthetic <onboarding@resend.dev>";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://fnu-vatel.vercel.app";
 const ADMIN_EMAIL = process.env.ADMIN_NOTIFY_EMAIL || "vcf.thanhmr@gmail.com";
+
+// Gmail SMTP — dùng khi chưa có domain riêng verify trong Resend.
+// Cần: GMAIL_USER (địa chỉ Gmail) + GMAIL_APP_PASSWORD (mật khẩu ứng dụng 16 ký tự,
+// tạo tại myaccount.google.com/apppasswords, yêu cầu đã bật 2-Step Verification).
+const GMAIL_USER = process.env.GMAIL_USER;
+const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD?.replace(/\s+/g, "");
+const gmailTransport = GMAIL_USER && GMAIL_APP_PASSWORD
+  ? nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: GMAIL_USER, pass: GMAIL_APP_PASSWORD },
+    })
+  : null;
 
 function formatVND(n: number) {
   return new Intl.NumberFormat("vi-VN").format(n) + "₫";
@@ -36,16 +49,32 @@ type LeadLike = {
 };
 
 async function send(to: string, subject: string, html: string) {
+  // Ưu tiên Gmail SMTP nếu đã cấu hình (gửi được tới mọi người ngay, không cần verify domain)
+  if (gmailTransport) {
+    try {
+      await gmailTransport.sendMail({
+        from: `Food Culture & Aesthetic <${GMAIL_USER}>`,
+        to,
+        subject,
+        html,
+      });
+      return;
+    } catch (e) {
+      console.error("[email] Gmail SMTP gửi thất bại:", (e as Error).message);
+      return;
+    }
+  }
+
   if (!KEY) {
-    // Chưa cấu hình Resend → bỏ qua, không làm hỏng luồng chính
-    console.warn("[email] RESEND_API_KEY chưa cấu hình — bỏ qua gửi:", subject);
+    // Chưa cấu hình email nào → bỏ qua, không làm hỏng luồng chính
+    console.warn("[email] Chưa cấu hình Gmail lẫn Resend — bỏ qua gửi:", subject);
     return;
   }
   try {
     const resend = new Resend(KEY);
     await resend.emails.send({ from: FROM, to, subject, html });
   } catch (e) {
-    console.error("[email] Gửi thất bại:", (e as Error).message);
+    console.error("[email] Resend gửi thất bại:", (e as Error).message);
   }
 }
 

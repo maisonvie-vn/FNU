@@ -118,6 +118,35 @@ html {
   color: #c9a24a;
 }
 
+/* Thư viện ảnh */
+.gal-tile .gal-cover {
+  transition: transform 0.55s ease;
+}
+.gal-tile:hover .gal-cover {
+  transform: scale(1.06);
+}
+.gal-arrow {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(168, 136, 78, 0.6);
+  background: rgba(4, 39, 38, 0.72);
+  color: #fbf8f4;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.25s,
+    color 0.25s;
+}
+.gal-arrow:hover {
+  background: #a8884e;
+  color: #042726;
+}
+
 @media (max-width: 780px) {
   [data-m="navlink"] {
     display: none !important;

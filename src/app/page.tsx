@@ -1,6 +1,8 @@
 import Curriculum from "./_landing/Curriculum";
 import Faq from "./_landing/Faq";
 import EnrollForm from "./_landing/EnrollForm";
+import SiteNav from "./_components/SiteNav";
+import SiteFooter from "./_components/SiteFooter";
 
 export const metadata = {
   title: "Food Culture & Aesthetic — FCA-2026",
@@ -54,34 +56,7 @@ const quotes = [
 export default function HomePage() {
   return (
     <div style={{ background: "#102B2A", color: "#FBF8F4", fontFamily: BODY }}>
-      {/* ===== NAV ===== */}
-      <div style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(4,39,38,0.94)", backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(168,136,78,0.45)" }}>
-        <div data-m="pad" style={{ maxWidth: 1200, margin: "0 auto", padding: "16px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
-            <span style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, letterSpacing: "0.02em", color: "#C9A24A" }}>Food Culture <span style={{ fontStyle: "italic", fontWeight: 400 }}>&amp;</span> Aesthetic</span>
-            <span style={{ fontSize: 11, letterSpacing: "0.22em", color: "#96A8A1" }}>FCA-2026</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 36 }}>
-            <a href="#curriculum" data-m="navlink" className="fd-nav">
-              <span className="en">Curriculum</span>
-              <span className="vi">Chương trình</span>
-            </a>
-            <a href="#assessment" data-m="navlink" className="fd-nav">
-              <span className="en">Assessment</span>
-              <span className="vi">Đánh giá</span>
-            </a>
-            <a href="#faq" data-m="navlink" className="fd-nav">
-              <span className="en">FAQ</span>
-              <span className="vi">Hỏi đáp</span>
-            </a>
-            <a href="/login" data-m="navlink" className="fd-nav">
-              <span className="en">Sign in</span>
-              <span className="vi">GV đăng nhập</span>
-            </a>
-            <a href="#enroll" className="l-cta" style={{ border: "1px solid #A8884E", color: "#C9A24A", padding: "12px 28px", borderRadius: 8, letterSpacing: "0.18em", fontSize: 12, textTransform: "uppercase", fontWeight: 600 }}>Enroll · Ghi danh</a>
-          </div>
-        </div>
-      </div>
+      <SiteNav />
 
       {/* ===== HERO ===== */}
       <div style={{ position: "relative", background: "#042726", color: "#FBF8F4", overflow: "hidden" }}>
@@ -242,13 +217,9 @@ export default function HomePage() {
             <EnrollForm />
           </div>
         </div>
-        <div style={{ borderTop: "1px solid rgba(168,136,78,0.35)" }}>
-          <div data-m="pad" style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 32px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-            <span style={{ fontFamily: DISPLAY, fontSize: 16, color: "#96A8A1" }}>Food Culture &amp; Aesthetic · FCA-2026</span>
-            <a href="/login" className="l-ul" style={{ fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: "#96A8A1" }}>Course Portal / CRM →</a>
-          </div>
-        </div>
       </div>
+
+      <SiteFooter />
     </div>
   );
 }

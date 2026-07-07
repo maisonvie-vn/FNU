@@ -15,23 +15,31 @@ export default async function GradebookPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const [studentsRes, gradesRes, sessionsRes, attRes] = await Promise.all([
-    supabase.from("students").select("id, student_code, full_name").order("student_code"),
+  const [enrollRes, gradesRes, sessionsRes, attRes] = await Promise.all([
+    // Chỉ lấy học viên còn đang học (loại trừ người đã bị đánh dấu nghỉ/bảo lưu)
+    supabase
+      .from("enrollments")
+      .select("students(id, student_code, full_name)")
+      .neq("status", "withdrawn"),
     supabase.from("grades").select("student_id, coursework, final"),
     supabase.from("sessions").select("id"),
     supabase.from("attendance").select("student_id, status"),
   ]);
 
   // Bảng chưa tạo → nhắc chạy migration
-  if (studentsRes.error || gradesRes.error || sessionsRes.error || attRes.error) {
+  if (enrollRes.error || gradesRes.error || sessionsRes.error || attRes.error) {
     return (
       <MigrationNotice
-        error={studentsRes.error?.message || gradesRes.error?.message || sessionsRes.error?.message || attRes.error?.message}
+        error={enrollRes.error?.message || gradesRes.error?.message || sessionsRes.error?.message || attRes.error?.message}
       />
     );
   }
 
-  const students = studentsRes.data || [];
+  type StudentLite = { id: string; student_code: string | null; full_name: string };
+  const students = ((enrollRes.data || [])
+    .map((e) => e.students)
+    .filter(Boolean) as unknown as StudentLite[])
+    .sort((a, b) => (a.student_code || "").localeCompare(b.student_code || ""));
   const grades = new Map((gradesRes.data || []).map((g) => [g.student_id, g]));
   const totalSessions = (sessionsRes.data || []).length || 15;
 

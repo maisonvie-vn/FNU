@@ -37,14 +37,22 @@ export default async function AttendancePage({
   const sessions = sessionsRes.data || [];
   const active = sessions.find((s) => s.id === sessionParam) || sessions[0];
 
-  const [studentsRes, attRes] = await Promise.all([
-    supabase.from("students").select("id, student_code, full_name").order("student_code"),
+  const [enrollRes, attRes] = await Promise.all([
+    // Chỉ lấy học viên còn đang học (loại trừ người đã bị đánh dấu nghỉ/bảo lưu)
+    supabase
+      .from("enrollments")
+      .select("students(id, student_code, full_name)")
+      .neq("status", "withdrawn"),
     active
       ? supabase.from("attendance").select("student_id, status").eq("session_id", active.id)
       : Promise.resolve({ data: [] as { student_id: string; status: string }[] }),
   ]);
 
-  const students = studentsRes.data || [];
+  type StudentLite = { id: string; student_code: string | null; full_name: string };
+  const students = ((enrollRes.data || [])
+    .map((e) => e.students)
+    .filter(Boolean) as unknown as StudentLite[])
+    .sort((a, b) => (a.student_code || "").localeCompare(b.student_code || ""));
   const statusOf = new Map((attRes.data || []).map((a) => [a.student_id, a.status]));
 
   return (

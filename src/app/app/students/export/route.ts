@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
   if (!user) return NextResponse.redirect(new URL("/login", req.url));
 
   const cohortFilter = req.nextUrl.searchParams.get("cohort");
+  const includeWithdrawn = req.nextUrl.searchParams.get("show") === "withdrawn";
   let query = supabase
     .from("enrollments")
     .select("cohort, status, created_at, students(student_code, full_name, email, phone), payments(amount, status, transfer_code)")
@@ -29,7 +30,9 @@ export async function GET(req: NextRequest) {
   if (cohortFilter) query = query.eq("cohort", cohortFilter);
 
   const { data } = await query;
-  const rows = ((data || []) as unknown as Row[]).filter((r) => r.students);
+  let rows = ((data || []) as unknown as Row[]).filter((r) => r.students);
+  // Mặc định xuất giống danh sách chính (loại người đã nghỉ), khớp với /app/students
+  if (!includeWithdrawn) rows = rows.filter((r) => r.status !== "withdrawn");
 
   const header = ["Họ tên", "MSSV", "Email", "SĐT", "Lớp/Khóa", "Trạng thái ghi danh", "Học phí", "Trạng thái thanh toán", "Mã CK", "Ngày ghi danh"];
   const lines = [header.map(csvEscape).join(",")];

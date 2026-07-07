@@ -61,12 +61,24 @@ export default function HomePage() {
             <span style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, letterSpacing: "0.02em", color: "#C9A24A" }}>Food Culture <span style={{ fontStyle: "italic", fontWeight: 400 }}>&amp;</span> Aesthetic</span>
             <span style={{ fontSize: 11, letterSpacing: "0.22em", color: "#96A8A1" }}>FCA-2026</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 28, fontSize: 13, letterSpacing: "0.08em" }}>
-            <a href="#curriculum" data-m="navlink" className="l-nav" style={{ color: "#FBF8F4" }}>Curriculum · Chương trình</a>
-            <a href="#assessment" data-m="navlink" className="l-nav" style={{ color: "#FBF8F4" }}>Assessment · Đánh giá</a>
-            <a href="#faq" data-m="navlink" className="l-nav" style={{ color: "#FBF8F4" }}>FAQ</a>
-            <a href="/login" data-m="navlink" className="l-nav" style={{ color: "#96A8A1" }}>Instructor sign in · GV đăng nhập</a>
-            <a href="#enroll" className="l-cta" style={{ border: "1px solid #A8884E", color: "#C9A24A", padding: "10px 22px", borderRadius: 8, letterSpacing: "0.14em", fontSize: 12, textTransform: "uppercase" }}>Enroll · Ghi danh</a>
+          <div style={{ display: "flex", alignItems: "center", gap: 36 }}>
+            <a href="#curriculum" data-m="navlink" className="fd-nav">
+              <span className="en">Curriculum</span>
+              <span className="vi">Chương trình</span>
+            </a>
+            <a href="#assessment" data-m="navlink" className="fd-nav">
+              <span className="en">Assessment</span>
+              <span className="vi">Đánh giá</span>
+            </a>
+            <a href="#faq" data-m="navlink" className="fd-nav">
+              <span className="en">FAQ</span>
+              <span className="vi">Hỏi đáp</span>
+            </a>
+            <a href="/login" data-m="navlink" className="fd-nav">
+              <span className="en">Sign in</span>
+              <span className="vi">GV đăng nhập</span>
+            </a>
+            <a href="#enroll" className="l-cta" style={{ border: "1px solid #A8884E", color: "#C9A24A", padding: "12px 28px", borderRadius: 8, letterSpacing: "0.18em", fontSize: 12, textTransform: "uppercase", fontWeight: 600 }}>Enroll · Ghi danh</a>
           </div>
         </div>
       </div>

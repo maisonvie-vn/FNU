@@ -69,6 +69,55 @@ html {
 .l-gold:hover {
   background: #fbf8f4 !important;
 }
+
+/* Menu fine-dining: mục 2 dòng (EN in hoa / VI nghiêng), gạch chân vàng chạy từ giữa khi hover */
+.fd-nav {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 2px 4px 9px;
+  text-align: center;
+  line-height: 1.2;
+}
+.fd-nav .en {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f4efe6;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+.fd-nav .vi {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  font-style: italic;
+  color: #8f9d96;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+.fd-nav::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  background: #c9a24a;
+  transition:
+    width 0.35s ease,
+    left 0.35s ease;
+}
+.fd-nav:hover::after {
+  width: 100%;
+  left: 0;
+}
+.fd-nav:hover .en,
+.fd-nav:hover .vi {
+  color: #c9a24a;
+}
+
 @media (max-width: 780px) {
   [data-m="navlink"] {
     display: none !important;

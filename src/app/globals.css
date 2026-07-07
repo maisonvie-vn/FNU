@@ -39,3 +39,49 @@ h3,
   text-transform: uppercase;
   color: var(--color-gold);
 }
+
+/* ===== Landing page (dựng lại từ thiết kế Landing.dc.html) ===== */
+html {
+  scroll-behavior: smooth;
+}
+::selection {
+  background: #a8884e;
+  color: #042726;
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.l-nav:hover,
+.l-ul:hover {
+  color: #c9a24a !important;
+}
+.l-cta:hover {
+  background: #a8884e;
+  color: #042726 !important;
+}
+.l-gold:hover {
+  background: #fbf8f4 !important;
+}
+@media (max-width: 780px) {
+  [data-m="navlink"] {
+    display: none !important;
+  }
+  [data-m="grid2"] {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+  [data-m="lessonpad"] {
+    padding-left: 0 !important;
+  }
+  [data-m="pad"] {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+}

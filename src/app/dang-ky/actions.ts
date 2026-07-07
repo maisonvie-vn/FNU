@@ -14,14 +14,20 @@ export async function submitLead(
   const full_name = String(formData.get("full_name") || "").trim();
   const email = String(formData.get("email") || "").trim();
   const phone = String(formData.get("phone") || "").trim();
-  const note = String(formData.get("note") || "").trim();
-  const cohort = String(formData.get("cohort") || "F-NU-10").trim();
+  const student_code = String(formData.get("student_code") || "").trim();
+  const extra = String(formData.get("note") || "").trim();
+  const cohort = String(formData.get("cohort") || "FCA-2026-Fall").trim();
 
   if (!full_name) return { error: "Vui lòng nhập họ và tên." };
   if (!email && !phone)
     return { error: "Vui lòng nhập ít nhất email hoặc số điện thoại." };
   if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
     return { error: "Email không hợp lệ." };
+
+  // MSSV chưa có cột riêng trong bảng leads → gộp vào note
+  const note = [student_code ? `MSSV: ${student_code}` : "", extra]
+    .filter(Boolean)
+    .join(" · ");
 
   const admin = createAdminClient();
   const { error } = await admin.from("leads").insert({

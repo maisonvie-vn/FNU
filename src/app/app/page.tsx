@@ -36,7 +36,7 @@ export default async function AppPage() {
       {/* Giao diện thiết kế của bạn */}
       <iframe
         src="/preview/index.html"
-        title="Course CRM"
+        title="Food Culture & Aesthetic"
         className="w-full flex-1 border-0"
       />
     </div>

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import LoginForm from "./login-form";
 
-export const metadata = { title: "Đăng nhập · Course CRM" };
+export const metadata = { title: "Đăng nhập · Food Culture & Aesthetic" };
 
 export default function LoginPage() {
   return (

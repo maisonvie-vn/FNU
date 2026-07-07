@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatVND } from "@/lib/vietqr";
 import { markPaid } from "./actions";
 
-export const metadata = { title: "Thanh toán · Course CRM" };
+export const metadata = { title: "Thanh toán · Food Culture & Aesthetic" };
 export const dynamic = "force-dynamic";
 
 type Payment = {

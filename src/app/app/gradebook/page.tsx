@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { upsertGrade } from "./actions";
 
-export const metadata = { title: "Bảng điểm · Course CRM" };
+export const metadata = { title: "Bảng điểm · Food Culture & Aesthetic" };
 export const dynamic = "force-dynamic";
 
 const round1 = (n: number) => Math.round(n * 10) / 10;

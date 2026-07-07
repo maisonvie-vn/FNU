@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { markAttendance, markAllPresent } from "./actions";
 
-export const metadata = { title: "Điểm danh · Course CRM" };
+export const metadata = { title: "Điểm danh · Food Culture & Aesthetic" };
 export const dynamic = "force-dynamic";
 
 const STATUSES: { key: string; label: string; on: string }[] = [

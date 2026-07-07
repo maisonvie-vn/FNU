@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "../login/actions";
 
-export const metadata = { title: "Tổng quan · Course CRM" };
+export const metadata = { title: "Tổng quan · Food Culture & Aesthetic" };
 
 export default async function DashboardPage() {
   const supabase = await createClient();

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { approveLead, rejectLead } from "./actions";
 
-export const metadata = { title: "Ghi danh · Course CRM" };
+export const metadata = { title: "Ghi danh · Food Culture & Aesthetic" };
 export const dynamic = "force-dynamic";
 
 type Lead = {

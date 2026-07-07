@@ -73,7 +73,11 @@ export default function HomePage() {
 
       {/* ===== HERO ===== */}
       <div style={{ position: "relative", background: "#042726", color: "#FBF8F4", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, background: "repeating-linear-gradient(115deg, #0A302E 0px, #0A302E 26px, #042726 26px, #042726 52px)", opacity: 0.85 }} />
+        {/* Ảnh nền food */}
+        <div style={{ position: "absolute", inset: 0, backgroundImage: 'url("/hero.webp")', backgroundSize: "cover", backgroundPosition: "center" }} />
+        {/* Lớp phủ tối để chữ đọc rõ (đậm bên trái, nhạt dần sang phải) */}
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(100deg, #042726 0%, rgba(4,39,38,0.92) 40%, rgba(4,39,38,0.6) 72%, rgba(4,39,38,0.3) 100%)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(4,39,38,0.5) 0%, transparent 30%, transparent 70%, rgba(4,39,38,0.55) 100%)" }} />
         <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 70% 30%, rgba(168,136,78,0.16), transparent 55%)" }} />
         <div data-m="pad" style={{ position: "relative", maxWidth: 1200, margin: "0 auto", padding: "120px 32px 110px", animation: "fadeUp 0.9s ease both" }}>
           <div style={{ fontSize: 12, letterSpacing: "0.32em", color: "#C9A24A", textTransform: "uppercase", marginBottom: 26 }}>University Course · Hospitality &amp; F&amp;B — Học phần đại học</div>

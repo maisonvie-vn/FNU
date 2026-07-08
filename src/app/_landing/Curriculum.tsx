@@ -31,14 +31,16 @@ export default function Curriculum() {
     <div>
       {MODULES.map((m, i) => (
         <div key={i} style={{ borderBottom: "1px solid rgba(168,136,78,0.35)" }}>
-          <div
+          <button
+            type="button"
+            aria-expanded={open === i}
             onClick={() => setOpen(open === i ? -1 : i)}
-            style={{ display: "flex", alignItems: "baseline", gap: 20, padding: "26px 0", cursor: "pointer" }}
+            style={{ display: "flex", width: "100%", alignItems: "baseline", gap: 20, padding: "26px 0", cursor: "pointer", background: "none", border: "none", textAlign: "left", fontFamily: "inherit" }}
           >
             <span style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 18, color: "#C9A24A", minWidth: 36 }}>{m[0]}</span>
             <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 600, flex: 1, color: "#FBF8F4" }}>{m[1]}</span>
-            <span style={{ fontSize: 20, color: "#96A8A1" }}>{open === i ? "−" : "+"}</span>
-          </div>
+            <span aria-hidden="true" style={{ fontSize: 20, color: "#96A8A1" }}>{open === i ? "−" : "+"}</span>
+          </button>
           {open === i && (
             <div data-m="lessonpad" style={{ padding: "0 0 26px 56px", display: "flex", flexDirection: "column", gap: 10 }}>
               {m[2].map((l) => (

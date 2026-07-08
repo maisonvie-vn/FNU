@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export type MatrixSession = { id: string; no: number };
+export type MatrixSession = { id: string; no: number; date: string | null };
 export type MatrixRow = {
   id: string;
   student_code: string | null;
@@ -30,7 +30,7 @@ export async function loadMatrix(
   supabase: SupabaseClient,
 ): Promise<{ sessions: MatrixSession[]; rows: MatrixRow[] } | { error: string }> {
   const [sessRes, enrRes, attRes, grRes, qaRes] = await Promise.all([
-    supabase.from("sessions").select("id, no").order("no"),
+    supabase.from("sessions").select("id, no, date").order("no"),
     supabase.from("enrollments").select("students(id, student_code, full_name)").neq("status", "withdrawn"),
     supabase.from("attendance").select("student_id, session_id, status"),
     supabase.from("grades").select("student_id, diligence, major_fit"),

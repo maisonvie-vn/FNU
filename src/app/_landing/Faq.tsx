@@ -17,13 +17,15 @@ export default function Faq() {
     <div>
       {FAQS.map((f, i) => (
         <div key={i} style={{ borderBottom: "1px solid rgba(168,136,78,0.35)" }}>
-          <div
+          <button
+            type="button"
+            aria-expanded={open === i}
             onClick={() => setOpen(open === i ? -1 : i)}
-            style={{ display: "flex", justifyContent: "space-between", gap: 20, padding: "22px 0", cursor: "pointer", alignItems: "baseline" }}
+            style={{ display: "flex", width: "100%", justifyContent: "space-between", gap: 20, padding: "22px 0", cursor: "pointer", alignItems: "baseline", background: "none", border: "none", textAlign: "left", fontFamily: "inherit" }}
           >
             <span style={{ fontFamily: "var(--font-display)", fontSize: 21, fontWeight: 600, color: "#FBF8F4" }}>{f[0]}</span>
-            <span style={{ color: "#96A8A1", fontSize: 18 }}>{open === i ? "−" : "+"}</span>
-          </div>
+            <span aria-hidden="true" style={{ color: "#96A8A1", fontSize: 18 }}>{open === i ? "−" : "+"}</span>
+          </button>
           {open === i && (
             <>
               <p style={{ fontSize: 15, lineHeight: 1.7, color: "#D5DFDA", margin: "0 0 8px", maxWidth: 640 }}>{f[1]}</p>

@@ -37,6 +37,16 @@ export async function saveScores(formData: FormData) {
   revalidatePath("/app/attendance");
 }
 
+// Đặt ngày cho 1 buổi học
+export async function setSessionDate(formData: FormData) {
+  const session_id = String(formData.get("session_id") || "");
+  const date = String(formData.get("date") || "").trim();
+  if (!session_id) return;
+  const supabase = await requireStaff();
+  await supabase.from("sessions").update({ date: date || null }).eq("id", session_id);
+  revalidatePath("/app/attendance");
+}
+
 // Điểm danh có mặt cả lớp cho 1 buổi
 export async function markAllPresent(formData: FormData) {
   const session_id = String(formData.get("session_id") || "");

@@ -17,7 +17,7 @@ export async function submitLead(
   const phone = String(formData.get("phone") || "").trim();
   const student_code = String(formData.get("student_code") || "").trim();
   const extra = String(formData.get("note") || "").trim();
-  const cohort = String(formData.get("cohort") || "FCA-2026-Fall").trim();
+  const cohort = String(formData.get("cohort") || "F-NU-11").trim();
 
   if (!full_name) return { error: "Vui lòng nhập họ và tên." };
   if (!email && !phone)

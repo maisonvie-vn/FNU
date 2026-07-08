@@ -1,7 +1,13 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { findStudentQuizzes, submitQuiz, type LookupResult, type SubmitResult, type TakingQuiz } from "./actions";
+
+function mmss(s: number) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${String(sec).padStart(2, "0")}`;
+}
 
 const inputCls = "h-12 w-full rounded-lg border border-gold/30 bg-ink px-4 text-cream placeholder:text-sage/50";
 
@@ -10,11 +16,25 @@ export default function QuizTaker() {
   const [submit, submitAction, submitPending] = useActionState<SubmitResult, FormData>(submitQuiz, {});
   const [active, setActive] = useState<TakingQuiz | null>(null);
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
+  const [remaining, setRemaining] = useState<number | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   function pick(quiz: TakingQuiz) {
     setActive(quiz);
     setAnswers({});
+    setRemaining(quiz.time_limit_min ? quiz.time_limit_min * 60 : null);
   }
+
+  // Đồng hồ đếm ngược — hết giờ tự nộp bài
+  useEffect(() => {
+    if (remaining == null || !active || submit.done) return;
+    if (remaining <= 0) {
+      formRef.current?.requestSubmit();
+      return;
+    }
+    const t = setTimeout(() => setRemaining((r) => (r == null ? r : r - 1)), 1000);
+    return () => clearTimeout(t);
+  }, [remaining, active, submit.done]);
   function setSingle(qid: string, oid: string) {
     setAnswers((a) => ({ ...a, [qid]: [oid] }));
   }
@@ -55,7 +75,12 @@ export default function QuizTaker() {
         <h2 className="font-display text-2xl text-cream">{active.title}</h2>
         {active.title_en && <p className="text-sm italic text-sage">{active.title_en}</p>}
         {active.description && <p className="mt-2 text-sm text-mist">{active.description}</p>}
-        {active.time_limit_min && <p className="mt-1 text-xs text-gold">Gợi ý thời gian: {active.time_limit_min} phút</p>}
+        {remaining != null && (
+          <div className={`mt-3 inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-semibold ${remaining <= 60 ? "border-danger/50 bg-danger/10 text-danger" : "border-gold/40 text-gold"}`} role="timer" aria-live="polite">
+            ⏱ Thời gian còn lại: {mmss(remaining)}
+            {remaining <= 60 && <span className="text-xs font-normal">— sắp hết giờ!</span>}
+          </div>
+        )}
 
         <ol className="mt-6 space-y-5">
           {active.questions.map((q, i) => {
@@ -87,7 +112,7 @@ export default function QuizTaker() {
           })}
         </ol>
 
-        <form action={submitAction} className="mt-6">
+        <form ref={formRef} action={submitAction} className="mt-6">
           <input type="hidden" name="student_id" value={lookup.student.id} />
           <input type="hidden" name="full_name" value={lookup.student.full_name} />
           <input type="hidden" name="quiz_id" value={active.id} />

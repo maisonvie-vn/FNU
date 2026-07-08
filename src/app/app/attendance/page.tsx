@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { markAttendance, markAllPresent, saveScores } from "./actions";
+import { markAttendance, markAllPresent, saveScores, setSessionDate } from "./actions";
 import { loadMatrix, STATUS_META } from "./matrix";
 
 export const metadata = { title: "Điểm danh · F&B-FCA" };
 export const dynamic = "force-dynamic";
+
+function fmtDate(d: string | null) {
+  if (!d) return null;
+  return new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(d + "T00:00:00+07:00"));
+}
 
 const STATUSES: { key: string; label: string; on: string }[] = [
   { key: "present", label: "Có mặt", on: "bg-success text-ink border-success" },
@@ -32,7 +37,7 @@ export default async function AttendancePage({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const sessionsRes = await supabase.from("sessions").select("id, no, title").order("no");
+  const sessionsRes = await supabase.from("sessions").select("id, no, title, date").order("no");
   if (sessionsRes.error) {
     return (
       <main className="mx-auto w-full max-w-2xl px-6 py-16 text-center">
@@ -90,7 +95,7 @@ export default async function AttendancePage({
               <tr>
                 <th className="sticky left-0 z-10 bg-ink-deep px-3 py-2 text-left text-xs font-medium text-ink" style={{ background: "#C9A24A", minWidth: 190 }}>Sinh viên</th>
                 {msessions.map((s) => (
-                  <th key={s.id} className="w-8 px-0 py-2 text-center text-[11px] font-semibold text-ink" style={{ background: "#C9A24A", borderLeft: "1px solid rgba(4,39,38,0.15)" }}>{s.no}</th>
+                  <th key={s.id} title={fmtDate(s.date) ? `Buổi ${s.no} · ${fmtDate(s.date)}` : `Buổi ${s.no}`} className="w-8 px-0 py-2 text-center text-[11px] font-semibold text-ink" style={{ background: "#C9A24A", borderLeft: "1px solid rgba(4,39,38,0.15)" }}>{s.no}</th>
                 ))}
                 <th className="px-2 py-2 text-center text-[11px] font-semibold text-ink" style={{ background: "#B8923F", minWidth: 64 }}>Attendance<br /><span className="font-normal">/100 (auto)</span></th>
                 <th className="px-2 py-2 text-center text-[11px] font-semibold text-ink" style={{ background: "#B8923F", minWidth: 72 }}>Chuyên cần<br /><span className="font-normal">/100</span></th>
@@ -117,11 +122,11 @@ export default async function AttendancePage({
                   })}
                   <td className="px-2 py-1.5 text-center font-display text-base" style={{ color: scoreColor(r.attendance100) }}>{r.attendance100}</td>
                   <td className="px-1 py-1.5">
-                    <input form={`sc-${r.id}`} name="diligence" defaultValue={r.diligence ?? ""} inputMode="numeric" placeholder="—"
+                    <input form={`sc-${r.id}`} name="diligence" defaultValue={r.diligence ?? ""} inputMode="numeric" placeholder="—" aria-label={`Chuyên cần /100 — ${r.full_name}`}
                       className="h-8 w-16 rounded border border-gold/25 bg-ink px-2 text-center text-cream outline-none focus:border-gold" />
                   </td>
                   <td className="px-1 py-1.5">
-                    <input form={`sc-${r.id}`} name="major_fit" defaultValue={r.major_fit ?? ""} inputMode="numeric" placeholder="—"
+                    <input form={`sc-${r.id}`} name="major_fit" defaultValue={r.major_fit ?? ""} inputMode="numeric" placeholder="—" aria-label={`Phù hợp chuyên ngành /100 — ${r.full_name}`}
                       className="h-8 w-16 rounded border border-gold/25 bg-ink px-2 text-center text-cream outline-none focus:border-gold" />
                   </td>
                   <td className="px-2 py-1.5 text-center font-display text-base" style={{ color: r.quiz100 == null ? "#5f6f68" : scoreColor(r.quiz100) }}>{r.quiz100 ?? "—"}</td>
@@ -155,18 +160,28 @@ export default async function AttendancePage({
             <Link
               key={s.id}
               href={`/app/attendance?session=${s.id}`}
-              className={`h-9 w-9 rounded-lg text-center text-sm leading-9 transition ${
+              title={fmtDate(s.date) ? `Buổi ${s.no} · ${fmtDate(s.date)}` : `Buổi ${s.no} (chưa đặt ngày)`}
+              className={`flex h-11 w-9 flex-col items-center justify-center rounded-lg text-center text-sm leading-none transition ${
                 active?.id === s.id ? "bg-gold font-semibold text-ink" : "border border-gold/25 text-mist hover:border-gold"
               }`}
             >
-              {s.no}
+              <span>{s.no}</span>
+              {fmtDate(s.date) && <span className="mt-0.5 text-[8px] opacity-70">{fmtDate(s.date)}</span>}
             </Link>
           ))}
         </div>
 
         {active && (
-          <div className="mb-4 flex items-center justify-between">
-            <span className="font-display text-2xl text-cream">Buổi {active.no}</span>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="font-display text-2xl text-cream">Buổi {active.no}</span>
+              <form action={setSessionDate} className="flex items-center gap-1.5">
+                <input type="hidden" name="session_id" value={active.id} />
+                <label htmlFor="sess-date" className="text-xs text-sage">Ngày:</label>
+                <input id="sess-date" type="date" name="date" defaultValue={active.date || ""} className="h-8 rounded-md border border-gold/25 bg-ink px-2 text-sm text-cream" />
+                <button className="h-8 rounded-md border border-gold/30 px-2.5 text-xs text-gold transition hover:bg-gold hover:text-ink">Lưu ngày</button>
+              </form>
+            </div>
             <form action={markAllPresent}>
               <input type="hidden" name="session_id" value={active.id} />
               <button className="h-9 rounded-lg border border-success/50 px-4 text-sm text-success transition hover:bg-success/10">Cả lớp có mặt</button>

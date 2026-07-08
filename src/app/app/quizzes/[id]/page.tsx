@@ -6,6 +6,7 @@ import {
   addQuestion, deleteQuestion,
   addOption, toggleCorrect, deleteOption,
 } from "../actions";
+import ConfirmSubmit from "@/app/_components/ConfirmSubmit";
 
 export const dynamic = "force-dynamic";
 
@@ -65,7 +66,7 @@ export default async function QuizEditor({ params }: { params: Promise<{ id: str
           </form>
           <form action={deleteQuiz}>
             <input type="hidden" name="id" value={qz.id} />
-            <button className="rounded-lg border border-danger/40 px-4 py-2 text-sm text-danger transition hover:bg-danger/10">Xóa đề</button>
+            <ConfirmSubmit message={`Xóa vĩnh viễn đề "${qz.title}"?\n\nToàn bộ câu hỏi, đáp án và kết quả làm bài của đề này sẽ bị xóa. Không khôi phục được.`} className="rounded-lg border border-danger/40 px-4 py-2 text-sm text-danger transition hover:bg-danger/10">Xóa đề</ConfirmSubmit>
           </form>
         </div>
       </header>
@@ -122,7 +123,7 @@ export default async function QuizEditor({ params }: { params: Promise<{ id: str
               <form action={deleteQuestion}>
                 <input type="hidden" name="id" value={q.id} />
                 <input type="hidden" name="quiz_id" value={qz.id} />
-                <button className="shrink-0 rounded-lg border border-danger/30 px-2 py-1 text-xs text-danger transition hover:bg-danger/10">Xóa</button>
+                <ConfirmSubmit message="Xóa câu hỏi này (kèm các đáp án)?" className="shrink-0 rounded-lg border border-danger/30 px-2 py-1 text-xs text-danger transition hover:bg-danger/10">Xóa</ConfirmSubmit>
               </form>
             </div>
 
@@ -145,7 +146,7 @@ export default async function QuizEditor({ params }: { params: Promise<{ id: str
                     <form action={deleteOption}>
                       <input type="hidden" name="id" value={o.id} />
                       <input type="hidden" name="quiz_id" value={qz.id} />
-                      <button className="rounded-md border border-danger/20 px-2 py-1 text-[11px] text-danger/80 transition hover:bg-danger/10">✕</button>
+                      <button aria-label="Xóa đáp án" title="Xóa đáp án" className="rounded-md border border-danger/20 px-2 py-1 text-[11px] text-danger/80 transition hover:bg-danger/10">✕</button>
                     </form>
                   </div>
                 </li>

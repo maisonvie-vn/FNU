@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { gcalEventUrl } from "@/lib/gcal";
 import { createSlot, deleteSlot, setAppointmentStatus } from "./actions";
+import ConfirmSubmit from "@/app/_components/ConfirmSubmit";
 
 export const metadata = { title: "Lịch hẹn · F&B-FCA" };
 export const dynamic = "force-dynamic";
@@ -100,7 +101,7 @@ export default async function AppointmentsPage() {
                 ) : (
                   <form action={deleteSlot}>
                     <input type="hidden" name="id" value={s.id} />
-                    <button className="rounded-lg border border-danger/40 px-3 py-1 text-xs text-danger transition hover:bg-danger/10">Xóa</button>
+                    <ConfirmSubmit message="Xóa khung giờ trống này?" className="rounded-lg border border-danger/40 px-3 py-1 text-xs text-danger transition hover:bg-danger/10">Xóa</ConfirmSubmit>
                   </form>
                 )}
               </li>

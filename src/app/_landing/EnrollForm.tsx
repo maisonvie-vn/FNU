@@ -61,15 +61,13 @@ export default function EnrollForm() {
       >
         Enrollment Application · Đơn ghi danh
       </div>
-      <input name="full_name" required placeholder="Full name / Họ tên" style={inputStyle} />
-      <input name="student_code" placeholder="Student ID / MSSV" style={inputStyle} />
-      <input name="email" type="email" required placeholder="Email" style={inputStyle} />
-      <input name="phone" type="tel" placeholder="Phone / Số điện thoại" style={inputStyle} />
-      <select name="cohort" defaultValue="FCA-2026-Summer" style={{ ...inputStyle, background: "#102B2A" }}>
-        <option value="FCA-2026-Summer">Khóa Mùa hè 2026 · Summer 2026</option>
-        <option value="FCA-2026-Fall">Khóa Mùa thu 2026 · Fall 2026</option>
-        <option value="FCA-2026-Winter">Khóa Mùa đông 2026 · Winter 2026</option>
-        <option value="FCA-2027-Spring">Khóa Mùa xuân 2027 · Spring 2027</option>
+      <input name="full_name" required aria-label="Họ tên · Full name" placeholder="Full name / Họ tên" style={inputStyle} />
+      <input name="student_code" aria-label="Mã sinh viên · Student ID" placeholder="Student ID / MSSV" style={inputStyle} />
+      <input name="email" type="email" required aria-label="Email" placeholder="Email" style={inputStyle} />
+      <input name="phone" type="tel" aria-label="Số điện thoại · Phone" placeholder="Phone / Số điện thoại" style={inputStyle} />
+      <select name="cohort" defaultValue="F-NU-11" aria-label="Khóa học · Intake" style={{ ...inputStyle, background: "#102B2A" }}>
+        <option value="F-NU-11">Khóa 11 · Intake 11 (2026)</option>
+        <option value="F-NU-10">Khóa 10 · Intake 10 (đang học)</option>
       </select>
       {state.error && (
         <div style={{ fontSize: 13, color: "#D98A7E" }}>{state.error}</div>

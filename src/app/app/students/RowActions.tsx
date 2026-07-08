@@ -3,12 +3,7 @@
 import { useRef } from "react";
 import { withdrawStudent, reactivateStudent, moveCohort } from "./actions";
 
-const COHORT_OPTIONS = [
-  "FCA-2026-Summer",
-  "FCA-2026-Fall",
-  "FCA-2026-Winter",
-  "FCA-2027-Spring",
-];
+const COHORT_OPTIONS = ["F-NU-10", "F-NU-11"];
 
 export function MoveCohortForm({
   enrollmentId,

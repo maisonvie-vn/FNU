@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { approveLead, rejectLead } from "./actions";
+import ConfirmSubmit from "@/app/_components/ConfirmSubmit";
 
 export const metadata = { title: "Ghi danh · F&B-FCA" };
 export const dynamic = "force-dynamic";
@@ -121,9 +122,9 @@ export default async function LeadsPage() {
                   </form>
                   <form action={rejectLead}>
                     <input type="hidden" name="id" value={lead.id} />
-                    <button className="h-10 rounded-lg border border-danger/50 px-4 text-sm text-danger transition hover:bg-danger/10">
+                    <ConfirmSubmit message={`Từ chối đơn của "${lead.full_name}"?`} className="h-10 rounded-lg border border-danger/50 px-4 text-sm text-danger transition hover:bg-danger/10">
                       Từ chối
-                    </button>
+                    </ConfirmSubmit>
                   </form>
                 </div>
               )}

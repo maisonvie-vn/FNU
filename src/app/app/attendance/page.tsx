@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 
 const STATUSES: { key: string; label: string; on: string }[] = [
   { key: "present", label: "Có mặt", on: "bg-success text-ink border-success" },
+  { key: "excused", label: "Xin phép", on: "bg-[#6FA3C0] text-ink border-[#6FA3C0]" },
   { key: "late", label: "Trễ", on: "bg-gold text-ink border-gold" },
   { key: "absent", label: "Vắng", on: "bg-danger text-ink border-danger" },
 ];

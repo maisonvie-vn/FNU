@@ -7,12 +7,14 @@ const DISPLAY = "var(--font-display)";
 
 const STATUS_VI: Record<string, string> = {
   present: "Có mặt",
+  excused: "Xin phép",
   late: "Trễ",
   absent: "Vắng",
 };
 
 function statusColor(s: string | null) {
   if (s === "present") return "#7FB595";
+  if (s === "excused") return "#6FA3C0";
   if (s === "late") return "#C9A24A";
   if (s === "absent") return "#D98A7E";
   return "#8f9d96";
@@ -58,7 +60,7 @@ export default function StudentLookup() {
         </div>
 
         {/* Điểm danh từng buổi */}
-        <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#C9A24A", marginBottom: 14 }}>Điểm danh · {d.present} có mặt · {d.late} trễ · {d.absent} vắng</div>
+        <div style={{ fontSize: 12, letterSpacing: "0.2em", textTransform: "uppercase", color: "#C9A24A", marginBottom: 14 }}>Điểm danh · {d.present} có mặt · {d.excused} xin phép · {d.late} trễ · {d.absent} vắng</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(58px,1fr))", gap: 8 }}>
           {d.sessions.map((s) => (
             <div key={s.no} style={{ border: `1px solid ${statusColor(s.status)}55`, borderRadius: 8, padding: "8px 4px", textAlign: "center", background: "#042726" }}>

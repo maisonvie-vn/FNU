@@ -15,6 +15,7 @@ export type PortalResult = {
     present: number;
     late: number;
     absent: number;
+    excused: number;
     attendanceScore: number;
     coursework: number | null;
     final: number | null;
@@ -72,13 +73,16 @@ export async function lookupStudent(
   const totalSessions = sessions.length || 15;
   const attMap = new Map((attRes.data || []).map((a) => [a.session_id, a.status]));
 
-  let present = 0, late = 0, absent = 0;
+  let present = 0, late = 0, absent = 0, excused = 0;
   for (const a of attRes.data || []) {
     if (a.status === "present") present++;
     else if (a.status === "late") late++;
+    else if (a.status === "excused") excused++; // xin phép: không tính là vắng
     else absent++;
   }
-  const attendanceScore = round1(((present + late * 0.5) / totalSessions) * 10);
+  // Nghỉ có phép được loại khỏi mẫu số (không bị trừ điểm chuyên cần)
+  const attDenom = Math.max(1, totalSessions - excused);
+  const attendanceScore = Math.min(10, round1(((present + late * 0.5) / attDenom) * 10));
 
   const g = gradeRes.data;
   const coursework = g?.coursework != null ? Number(g.coursework) : null;
@@ -100,6 +104,7 @@ export async function lookupStudent(
       present,
       late,
       absent,
+      excused,
       attendanceScore,
       coursework,
       final,

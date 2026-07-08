@@ -44,18 +44,21 @@ export default async function GradebookPage() {
   const totalSessions = (sessionsRes.data || []).length || 15;
 
   // Gom điểm danh theo sinh viên
-  const att = new Map<string, { present: number; late: number; absent: number }>();
+  const att = new Map<string, { present: number; late: number; absent: number; excused: number }>();
   for (const a of attRes.data || []) {
-    const cur = att.get(a.student_id) || { present: 0, late: 0, absent: 0 };
+    const cur = att.get(a.student_id) || { present: 0, late: 0, absent: 0, excused: 0 };
     if (a.status === "present") cur.present++;
     else if (a.status === "late") cur.late++;
+    else if (a.status === "excused") cur.excused++; // xin phép: không tính là vắng
     else cur.absent++;
     att.set(a.student_id, cur);
   }
 
   const rows = students.map((s) => {
-    const a = att.get(s.id) || { present: 0, late: 0, absent: 0 };
-    const attendance = round1(((a.present + a.late * 0.5) / totalSessions) * 10);
+    const a = att.get(s.id) || { present: 0, late: 0, absent: 0, excused: 0 };
+    // Nghỉ có phép được loại khỏi mẫu số (không bị trừ điểm chuyên cần)
+    const denom = Math.max(1, totalSessions - a.excused);
+    const attendance = Math.min(10, round1(((a.present + a.late * 0.5) / denom) * 10));
     const g = grades.get(s.id);
     const coursework = g?.coursework != null ? Number(g.coursework) : null;
     const final = g?.final != null ? Number(g.final) : null;
@@ -212,7 +215,7 @@ export default async function GradebookPage() {
           </tbody>
         </table>
       </div>
-      <p className="mt-4 text-xs text-sage">Điểm chuyên cần tính tự động từ điểm danh (có mặt =1, trễ =0.5) trên {totalSessions} buổi. Vắng quá 20% → cấm thi. Đạt: tổng kết ≥ 4.0.</p>
+      <p className="mt-4 text-xs text-sage">Điểm chuyên cần tính tự động từ điểm danh (có mặt =1, trễ =0.5). <span className="text-[#6FA3C0]">Xin phép</span> = nghỉ có phép, KHÔNG bị trừ điểm (loại khỏi mẫu số) và không tính vào tỷ lệ vắng. Chỉ <span className="text-danger">vắng không phép</span> quá 20% → cấm thi. Đạt: tổng kết ≥ 4.0.</p>
     </main>
   );
 }

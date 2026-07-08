@@ -89,6 +89,7 @@ export default function QuizTaker() {
 
         <form action={submitAction} className="mt-6">
           <input type="hidden" name="student_id" value={lookup.student.id} />
+          <input type="hidden" name="full_name" value={lookup.student.full_name} />
           <input type="hidden" name="quiz_id" value={active.id} />
           <input type="hidden" name="answers" value={JSON.stringify(answers)} />
           {submit.error && <p className="mb-3 rounded-lg border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger">{submit.error}</p>}

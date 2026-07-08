@@ -37,17 +37,18 @@ export default function StudentLookup() {
           </div>
         </div>
 
-        {/* Tổng kết */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 14, marginBottom: 24 }}>
+        {/* Bảng điểm (thang 100) */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(130px,1fr))", gap: 12, marginBottom: 24 }}>
           {[
-            { label: "Chuyên cần", vi: "·10%", value: d.attendanceScore.toFixed(1), color: "#D5DFDA" },
-            { label: "Quá trình", vi: "·30%", value: d.coursework != null ? d.coursework.toFixed(1) : "—", color: "#D5DFDA" },
-            { label: "Cuối kỳ", vi: "·60%", value: d.final != null ? d.final.toFixed(1) : "—", color: "#D5DFDA" },
-            { label: "Tổng kết", vi: "", value: d.total != null ? d.total.toFixed(1) : "—", color: "#C9A24A" },
+            { label: "Chuyên cần", vi: "Attendance", value: d.attendance100, color: "#D5DFDA" },
+            { label: "Quá trình", vi: "Chuyên cần", value: d.diligence, color: "#D5DFDA" },
+            { label: "Phù hợp CN", vi: "Major fit", value: d.major_fit, color: "#D5DFDA" },
+            { label: "Bài kiểm tra", vi: "Quiz", value: d.quiz100, color: "#D5DFDA" },
+            { label: "Tổng kết", vi: "Overall", value: d.tb, color: "#C9A24A" },
           ].map((c) => (
-            <div key={c.label} style={{ border: "1px solid rgba(168,136,78,0.3)", borderRadius: 12, padding: "16px 14px", textAlign: "center", background: "#042726" }}>
-              <div style={{ fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "#96A8A1" }}>{c.label} <span style={{ color: "#8f9d96" }}>{c.vi}</span></div>
-              <div style={{ fontFamily: DISPLAY, fontSize: 34, color: c.color, marginTop: 4 }}>{c.value}</div>
+            <div key={c.label} style={{ border: "1px solid rgba(168,136,78,0.3)", borderRadius: 12, padding: "16px 12px", textAlign: "center", background: "#042726" }}>
+              <div style={{ fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "#96A8A1" }}>{c.label} <span style={{ color: "#8f9d96" }}>· {c.vi}</span></div>
+              <div style={{ fontFamily: DISPLAY, fontSize: 32, color: c.color, marginTop: 4 }}>{c.value ?? "—"}<span style={{ fontSize: 14, color: "#8f9d96" }}>{c.value != null ? "/100" : ""}</span></div>
             </div>
           ))}
         </div>

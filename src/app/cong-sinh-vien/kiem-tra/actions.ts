@@ -65,14 +65,28 @@ export type SubmitResult = {
 };
 
 // Bước 2: nộp bài — chấm điểm hoàn toàn ở server (đáp án đúng không bao giờ ra client)
+const MAX_ATTEMPTS = 3;
+
 export async function submitQuiz(_prev: SubmitResult, formData: FormData): Promise<SubmitResult> {
   const studentId = String(formData.get("student_id") || "");
+  const fullName = String(formData.get("full_name") || "");
   const quizId = String(formData.get("quiz_id") || "");
   let answers: Record<string, string[]> = {};
   try { answers = JSON.parse(String(formData.get("answers") || "{}")); } catch { answers = {}; }
   if (!studentId || !quizId) return { error: "Thiếu thông tin bài làm." };
 
   const admin = createAdminClient();
+
+  // Xác thực lại danh tính SV (chống nộp hộ người khác bằng student_id tùy ý)
+  const { data: st } = await admin.from("students").select("id, full_name").eq("id", studentId).maybeSingle();
+  if (!st || norm(st.full_name) !== norm(fullName)) return { error: "Không xác thực được sinh viên. Vui lòng tra cứu lại." };
+  const { data: enr } = await admin.from("enrollments").select("status").eq("student_id", studentId).order("created_at", { ascending: false }).limit(1).maybeSingle();
+  if (!enr || enr.status === "withdrawn") return { error: "Hồ sơ của bạn hiện không còn hoạt động." };
+
+  // Giới hạn số lần làm mỗi đề
+  const { count: attempts } = await admin.from("quiz_attempts").select("*", { count: "exact", head: true }).eq("quiz_id", quizId).eq("student_id", studentId);
+  if ((attempts || 0) >= MAX_ATTEMPTS) return { error: `Bạn đã làm đề này ${MAX_ATTEMPTS} lần (tối đa). Hệ thống lấy điểm cao nhất.` };
+
   const { data: quiz } = await admin.from("quizzes").select("id, pass_score").eq("id", quizId).eq("is_published", true).single();
   if (!quiz) return { error: "Đề thi không tồn tại hoặc đã gỡ." };
 

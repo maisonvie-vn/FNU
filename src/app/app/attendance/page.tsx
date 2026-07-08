@@ -95,6 +95,7 @@ export default async function AttendancePage({
                 <th className="px-2 py-2 text-center text-[11px] font-semibold text-ink" style={{ background: "#B8923F", minWidth: 64 }}>Attendance<br /><span className="font-normal">/100 (auto)</span></th>
                 <th className="px-2 py-2 text-center text-[11px] font-semibold text-ink" style={{ background: "#B8923F", minWidth: 72 }}>Chuyên cần<br /><span className="font-normal">/100</span></th>
                 <th className="px-2 py-2 text-center text-[11px] font-semibold text-ink" style={{ background: "#B8923F", minWidth: 80 }}>Phù hợp<br />chuyên ngành</th>
+                <th className="px-2 py-2 text-center text-[11px] font-semibold text-ink" style={{ background: "#B8923F", minWidth: 58 }}>Quiz<br /><span className="font-normal">/100 (auto)</span></th>
                 <th className="px-2 py-2 text-center text-[11px] font-semibold text-ink" style={{ background: "#A8884E", minWidth: 56 }}>Tổng kết<br /><span className="font-normal">/100</span></th>
                 <th className="px-2 py-2 text-center text-[11px] font-semibold text-ink" style={{ background: "#A8884E" }}>Lưu</th>
               </tr>
@@ -123,6 +124,7 @@ export default async function AttendancePage({
                     <input form={`sc-${r.id}`} name="major_fit" defaultValue={r.major_fit ?? ""} inputMode="numeric" placeholder="—"
                       className="h-8 w-16 rounded border border-gold/25 bg-ink px-2 text-center text-cream outline-none focus:border-gold" />
                   </td>
+                  <td className="px-2 py-1.5 text-center font-display text-base" style={{ color: r.quiz100 == null ? "#5f6f68" : scoreColor(r.quiz100) }}>{r.quiz100 ?? "—"}</td>
                   <td className="px-2 py-1.5 text-center font-display text-lg" style={{ color: scoreColor(r.tb) }}>{r.tb}</td>
                   <td className="px-2 py-1.5 text-center">
                     <form id={`sc-${r.id}`} action={saveScores}>
@@ -133,7 +135,7 @@ export default async function AttendancePage({
                 </tr>
               ))}
               {mrows.length === 0 && (
-                <tr><td colSpan={msessions.length + 5} className="px-4 py-10 text-center text-sage">Chưa có sinh viên.</td></tr>
+                <tr><td colSpan={msessions.length + 6} className="px-4 py-10 text-center text-sage">Chưa có sinh viên.</td></tr>
               )}
             </tbody>
           </table>
@@ -141,7 +143,7 @@ export default async function AttendancePage({
         <p className="mt-3 text-xs text-sage">
           15 ô mỗi dòng = trạng thái điểm danh từng buổi (sửa ở phần &quot;Điểm danh theo buổi&quot; bên dưới). <b className="text-mist">Attendance</b> tự tính từ điểm danh
           (có mặt =100, trễ =50, xin phép: loại khỏi mẫu số). <b className="text-mist">Chuyên cần</b> &amp; <b className="text-mist">Phù hợp chuyên ngành</b> nhập tay 0–100.
-          Tổng kết = trung bình các cột. Nhập điểm rồi bấm <b className="text-mist">Lưu</b>.
+<b className="text-mist">Quiz</b> tự tính từ điểm bài kiểm tra (điểm cao nhất mỗi đề). Tổng kết = trung bình các cột đã có. Nhập điểm rồi bấm <b className="text-mist">Lưu</b>.
         </p>
       </section>
 

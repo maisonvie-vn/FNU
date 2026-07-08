@@ -50,6 +50,7 @@ export default async function AttendancePrintPage() {
             <th>Att<br />/100</th>
             <th>Ch.cần<br />/100</th>
             <th>Phù hợp<br />CN</th>
+            <th>Quiz<br />/100</th>
             <th>Tổng<br />/100</th>
           </tr>
         </thead>
@@ -65,6 +66,7 @@ export default async function AttendancePrintPage() {
               <td style={{ fontWeight: 700 }}>{r.attendance100}</td>
               <td>{r.diligence ?? ""}</td>
               <td>{r.major_fit ?? ""}</td>
+              <td>{r.quiz100 ?? ""}</td>
               <td style={{ fontWeight: 700 }}>{r.tb}</td>
             </tr>
           ))}

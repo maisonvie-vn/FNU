@@ -1,4 +1,5 @@
 import Link from "next/link";
+import MobileMenu from "./MobileMenu";
 
 const DISPLAY = "var(--font-display)";
 
@@ -29,9 +30,10 @@ export default function SiteNav() {
               <span className="vi">{l.vi}</span>
             </Link>
           ))}
-          <Link href="/#enroll" className="l-cta" style={{ border: "1px solid #A8884E", color: "#C9A24A", padding: "12px 26px", borderRadius: 8, letterSpacing: "0.16em", fontSize: 12, textTransform: "uppercase", fontWeight: 600, whiteSpace: "nowrap" }}>
+          <Link href="/#enroll" data-m="navlink" className="l-cta" style={{ border: "1px solid #A8884E", color: "#C9A24A", padding: "12px 26px", borderRadius: 8, letterSpacing: "0.16em", fontSize: 12, textTransform: "uppercase", fontWeight: 600, whiteSpace: "nowrap" }}>
             Enroll · Ghi danh
           </Link>
+          <MobileMenu links={LINKS} />
         </div>
       </div>
     </div>

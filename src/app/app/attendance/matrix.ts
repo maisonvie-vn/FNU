@@ -13,6 +13,7 @@ export type MatrixRow = {
   attendance100: number; // Attendance tự tính /100
   diligence: number | null; // Chuyên cần /100 (nhập tay)
   major_fit: number | null; // Phù hợp chuyên ngành /100 (nhập tay)
+  quiz100: number | null; // Điểm bài kiểm tra TB (điểm cao nhất mỗi đề) /100
   tb: number; // trung bình các cột đã có /100
 };
 
@@ -28,11 +29,12 @@ const r0 = (n: number) => Math.round(n);
 export async function loadMatrix(
   supabase: SupabaseClient,
 ): Promise<{ sessions: MatrixSession[]; rows: MatrixRow[] } | { error: string }> {
-  const [sessRes, enrRes, attRes, grRes] = await Promise.all([
+  const [sessRes, enrRes, attRes, grRes, qaRes] = await Promise.all([
     supabase.from("sessions").select("id, no").order("no"),
     supabase.from("enrollments").select("students(id, student_code, full_name)").neq("status", "withdrawn"),
     supabase.from("attendance").select("student_id, session_id, status"),
     supabase.from("grades").select("student_id, diligence, major_fit"),
+    supabase.from("quiz_attempts").select("student_id, quiz_id, score"),
   ]);
   if (sessRes.error) return { error: sessRes.error.message };
 
@@ -58,6 +60,14 @@ export async function loadMatrix(
       g,
     ]),
   );
+  // Điểm quiz: điểm CAO NHẤT mỗi đề của mỗi SV → trung bình các đề (score /10 → /100)
+  const bestQuiz = new Map<string, Map<string, number>>();
+  for (const a of (qaRes.data || []) as { student_id: string; quiz_id: string; score: number | null }[]) {
+    if (a.score == null) continue;
+    if (!bestQuiz.has(a.student_id)) bestQuiz.set(a.student_id, new Map());
+    const m = bestQuiz.get(a.student_id)!;
+    m.set(a.quiz_id, Math.max(m.get(a.quiz_id) ?? 0, Number(a.score)));
+  }
 
   const rows: MatrixRow[] = students.map((s) => {
     const sm = attMap.get(s.id) || new Map<string, string>();
@@ -76,9 +86,11 @@ export async function loadMatrix(
     const g = grMap.get(s.id);
     const diligence = g?.diligence != null ? Number(g.diligence) : null;
     const major_fit = g?.major_fit != null ? Number(g.major_fit) : null;
-    const comps = [attendance100, ...(diligence != null ? [diligence] : []), ...(major_fit != null ? [major_fit] : [])];
+    const qm = bestQuiz.get(s.id);
+    const quiz100 = qm && qm.size > 0 ? r0(([...qm.values()].reduce((a, b) => a + b, 0) / qm.size) * 10) : null;
+    const comps = [attendance100, ...(diligence != null ? [diligence] : []), ...(major_fit != null ? [major_fit] : []), ...(quiz100 != null ? [quiz100] : [])];
     const tb = r0(comps.reduce((a, b) => a + b, 0) / comps.length);
-    return { id: s.id, student_code: s.student_code, full_name: s.full_name, cells, present, late, excused, absent, attendance100, diligence, major_fit, tb };
+    return { id: s.id, student_code: s.student_code, full_name: s.full_name, cells, present, late, excused, absent, attendance100, diligence, major_fit, quiz100, tb };
   });
 
   return { sessions, rows };

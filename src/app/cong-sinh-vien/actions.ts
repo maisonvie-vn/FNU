@@ -16,10 +16,11 @@ export type PortalResult = {
     late: number;
     absent: number;
     excused: number;
-    attendanceScore: number;
-    coursework: number | null;
-    final: number | null;
-    total: number | null;
+    attendance100: number;
+    diligence: number | null;
+    major_fit: number | null;
+    quiz100: number | null;
+    tb: number | null;
     status: string;
     barred: boolean;
     sessions: { no: number; status: string | null }[];
@@ -63,10 +64,11 @@ export async function lookupStudent(
     return { error: "Hồ sơ của bạn hiện không còn hoạt động. Vui lòng liên hệ giảng viên." };
   }
 
-  const [sessionsRes, attRes, gradeRes] = await Promise.all([
+  const [sessionsRes, attRes, gradeRes, qaRes] = await Promise.all([
     admin.from("sessions").select("id, no").order("no"),
     admin.from("attendance").select("session_id, status").eq("student_id", student.id),
-    admin.from("grades").select("coursework, final").eq("student_id", student.id).maybeSingle(),
+    admin.from("grades").select("diligence, major_fit").eq("student_id", student.id).maybeSingle(),
+    admin.from("quiz_attempts").select("quiz_id, score").eq("student_id", student.id),
   ]);
 
   const sessions = sessionsRes.data || [];
@@ -80,19 +82,28 @@ export async function lookupStudent(
     else if (a.status === "excused") excused++; // xin phép: không tính là vắng
     else absent++;
   }
-  // Mẫu số = số buổi ĐÃ điểm danh của SV (present+late+absent), loại buổi xin phép
+  const r0 = (n: number) => Math.round(n);
+  // Điểm chuyên cần (Attendance) /100 — mẫu số = số buổi ĐÃ điểm danh của SV
   const attDenom = Math.max(1, present + late + absent);
-  const attendanceScore = (present + late + absent) === 0 ? 0 : Math.min(10, round1(((present + late * 0.5) / attDenom) * 10));
+  const attendance100 = (present + late + absent) === 0 ? 0 : Math.min(100, r0(((present + late * 0.5) / attDenom) * 100));
 
   const g = gradeRes.data;
-  const coursework = g?.coursework != null ? Number(g.coursework) : null;
-  const final = g?.final != null ? Number(g.final) : null;
-  const total =
-    coursework != null || final != null
-      ? round1(attendanceScore * 0.1 + (coursework || 0) * 0.3 + (final || 0) * 0.6)
-      : null;
-  const barred = absent > totalSessions * 0.2;
-  const status = barred ? "CẤM THI" : total == null ? "Đang cập nhật" : total >= 4 ? "ĐẠT" : "CHƯA ĐẠT";
+  const diligence = g?.diligence != null ? Number(g.diligence) : null;
+  const major_fit = g?.major_fit != null ? Number(g.major_fit) : null;
+
+  // Điểm quiz /100 = TB điểm cao nhất mỗi đề (score /10 → /100)
+  const bestByQuiz = new Map<string, number>();
+  for (const a of (qaRes.data || []) as { quiz_id: string; score: number | null }[]) {
+    if (a.score == null) continue;
+    bestByQuiz.set(a.quiz_id, Math.max(bestByQuiz.get(a.quiz_id) ?? 0, Number(a.score)));
+  }
+  const quiz100 = bestByQuiz.size > 0 ? r0(([...bestByQuiz.values()].reduce((x, y) => x + y, 0) / bestByQuiz.size) * 10) : null;
+
+  const comps = [attendance100, ...(diligence != null ? [diligence] : []), ...(major_fit != null ? [major_fit] : []), ...(quiz100 != null ? [quiz100] : [])];
+  const hasAny = diligence != null || major_fit != null || quiz100 != null || (present + late + absent) > 0;
+  const tb = hasAny ? r0(comps.reduce((x, y) => x + y, 0) / comps.length) : null;
+  const barred = absent > totalSessions * 0.2; // vắng KHÔNG phép quá 20% số buổi
+  const status = barred ? "CẤM THI" : tb == null ? "Đang cập nhật" : tb >= 50 ? "ĐẠT" : "CHƯA ĐẠT";
 
   return {
     ok: true,
@@ -105,10 +116,11 @@ export async function lookupStudent(
       late,
       absent,
       excused,
-      attendanceScore,
-      coursework,
-      final,
-      total,
+      attendance100,
+      diligence,
+      major_fit,
+      quiz100,
+      tb,
       status,
       barred,
       sessions: sessions.map((s) => ({ no: s.no, status: attMap.get(s.id) || null })),

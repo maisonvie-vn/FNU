@@ -37,9 +37,10 @@ const experiences = [
 ];
 
 const gradeBars = [
-  { label: "Attendance", vi: "Điểm chuyên cần", pct: "10%", width: "10%", fill: "#96A8A1" },
-  { label: "Coursework", vi: "Điểm quá trình — quizzes, assignments, presentation, participation", pct: "30%", width: "30%", fill: "#A8884E" },
-  { label: "Final assessment", vi: "Điểm cuối kỳ — capstone 50% + thi viết 50%", pct: "60%", width: "60%", fill: "#C9A24A" },
+  { label: "Attendance", vi: "Chuyên cần — tự tính từ điểm danh", pct: "25%", width: "25%", fill: "#7FB595" },
+  { label: "Diligence", vi: "Chuyên cần đánh giá — thái độ, quá trình học", pct: "25%", width: "25%", fill: "#C9A24A" },
+  { label: "Major fit", vi: "Phù hợp chuyên ngành — năng lực nghề", pct: "25%", width: "25%", fill: "#A8884E" },
+  { label: "Quiz", vi: "Bài kiểm tra — chấm điểm tự động", pct: "25%", width: "25%", fill: "#6FA3C0" },
 ];
 
 const instructors = [
@@ -146,8 +147,8 @@ export default function HomePage() {
             <div style={{ fontSize: 12, letterSpacing: "0.3em", color: "#C9A24A", textTransform: "uppercase", marginBottom: 18 }}>Assessment · Đánh giá</div>
             <h2 style={{ fontFamily: DISPLAY, fontSize: 42, fontWeight: 500, lineHeight: 1.14, margin: "0 0 8px", color: "#FBF8F4" }}>Transparent from day one.</h2>
             <div style={{ fontFamily: DISPLAY, fontStyle: "italic", fontSize: 19, color: "#C9A24A", marginBottom: 20 }}>Minh bạch từ buổi đầu tiên.</div>
-            <p style={{ fontSize: 15, lineHeight: 1.7, color: "#D5DFDA", margin: "0 0 14px" }}>Vietnamese 10-point scale. Your grade is composed of three parts — attendance, coursework, and the final assessment — computed live in the course portal.<br /><span style={{ fontSize: 13, color: "#96A8A1" }}>Thang điểm 10, gồm ba thành phần: chuyên cần, quá trình và cuối kỳ — tính tự động trong cổng học tập.</span></p>
-            <p style={{ fontSize: 13, lineHeight: 1.6, color: "#96A8A1", margin: 0 }}>Missing more than 20% of sessions bars you from the final exam (cấm thi). Pass threshold: 4.0. — Vắng quá 20% số buổi sẽ bị cấm thi. Điểm đạt: 4.0.</p>
+            <p style={{ fontSize: 15, lineHeight: 1.7, color: "#D5DFDA", margin: "0 0 14px" }}>100-point scale. Your grade is the average of four parts — attendance, diligence, major-fit and quizzes — computed live in the course portal.<br /><span style={{ fontSize: 13, color: "#96A8A1" }}>Thang điểm 100, tổng kết là trung bình bốn thành phần: chuyên cần (điểm danh), chuyên cần đánh giá, phù hợp chuyên ngành và bài kiểm tra — tính tự động trong cổng học tập.</span></p>
+            <p style={{ fontSize: 13, lineHeight: 1.6, color: "#96A8A1", margin: 0 }}>Leave with permission (xin phép) is not penalised; only unexcused absence over 20% bars you from the exam (cấm thi). Pass threshold: 50/100. — Nghỉ có phép không bị trừ điểm; chỉ vắng không phép quá 20% số buổi mới bị cấm thi. Điểm đạt: 50/100.</p>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {gradeBars.map((g) => (

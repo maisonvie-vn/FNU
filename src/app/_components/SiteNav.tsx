@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/thu-vien-anh", en: "Gallery", vi: "Thư viện ảnh" },
   { href: "/blog", en: "Blog", vi: "Tin tức" },
   { href: "/cong-sinh-vien", en: "Portal", vi: "Cổng SV" },
+  { href: "/dat-lich", en: "Book", vi: "Đặt lịch" },
   { href: "/login", en: "Sign in", vi: "GV đăng nhập" },
 ];
 
@@ -18,9 +19,8 @@ export default function SiteNav() {
       <div data-m="pad" style={{ maxWidth: 1200, margin: "0 auto", padding: "16px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
         <Link href="/" style={{ display: "flex", alignItems: "baseline", gap: 12, textDecoration: "none" }}>
           <span style={{ fontFamily: DISPLAY, fontSize: 22, fontWeight: 600, letterSpacing: "0.02em", color: "#C9A24A", whiteSpace: "nowrap" }}>
-            Food Culture <span style={{ fontStyle: "italic", fontWeight: 400 }}>&amp;</span> Aesthetic
+            F<span style={{ fontStyle: "italic", fontWeight: 400 }}>&amp;</span>B-FCA
           </span>
-          <span style={{ fontSize: 11, letterSpacing: "0.22em", color: "#96A8A1" }}>FCA-2026</span>
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
           {LINKS.map((l) => (

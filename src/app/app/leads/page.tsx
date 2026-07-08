@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { approveLead, rejectLead } from "./actions";
 
-export const metadata = { title: "Ghi danh · Food Culture & Aesthetic" };
+export const metadata = { title: "Ghi danh · F&B-FCA" };
 export const dynamic = "force-dynamic";
 
 type Lead = {
@@ -49,10 +49,10 @@ export default async function LeadsPage() {
   const pending = list.filter((l) => l.status === "pending").length;
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-6 py-10">
+    <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
       <header className="mb-8 flex flex-wrap items-start justify-between gap-4 border-b border-gold/20 pb-6">
         <div>
-          <p className="eyebrow">Food Culture &amp; Aesthetic</p>
+          <p className="eyebrow">F&amp;B-FCA</p>
           <h1 className="mt-1 font-display text-4xl text-cream">
             Ghi danh <span className="text-sage">(Hồ sơ đăng ký)</span>
           </h1>

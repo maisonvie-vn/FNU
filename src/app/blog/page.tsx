@@ -6,9 +6,9 @@ import { POSTS } from "../_data/blog";
 const DISPLAY = "var(--font-display)";
 
 export const metadata = {
-  title: "Blog · Tin tức · Food Culture & Aesthetic",
+  title: "Blog · Tin tức · F&B-FCA",
   description:
-    "Blog Food Culture & Aesthetic — bài viết về văn hóa ẩm thực, fine dining và xu hướng F&B 2026. Articles on food culture, fine dining and F&B trends.",
+    "Blog F&B-FCA — bài viết về văn hóa ẩm thực, fine dining và xu hướng F&B 2026. Articles on food culture, fine dining and F&B trends.",
 };
 
 function fmtDate(iso: string) {

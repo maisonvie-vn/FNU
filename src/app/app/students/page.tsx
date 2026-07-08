@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatVND } from "@/lib/vietqr";
 import { MoveCohortForm, WithdrawButton, ReactivateButton } from "./RowActions";
 
-export const metadata = { title: "Danh sách học viên · Food Culture & Aesthetic" };
+export const metadata = { title: "Danh sách học viên · F&B-FCA" };
 export const dynamic = "force-dynamic";
 
 type Row = {
@@ -53,11 +53,11 @@ export default async function StudentsPage({
   const cohorts = [...new Set(allRows.map((r) => r.cohort).filter(Boolean))] as string[];
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-6 py-10">
+    <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
       <header className="mb-8 flex flex-wrap items-start justify-between gap-4 border-b border-gold/20 pb-6">
         <div>
           <p className="eyebrow">
-            {showWithdrawn ? "Food Culture & Aesthetic · Đã nghỉ / bảo lưu" : "Food Culture & Aesthetic"}
+            {showWithdrawn ? "F&B-FCA · Đã nghỉ / bảo lưu" : "F&B-FCA"}
           </p>
           <h1 className="mt-1 font-display text-4xl text-cream">
             {showWithdrawn ? "Học viên đã nghỉ / bảo lưu" : "Danh sách học viên"}{" "}

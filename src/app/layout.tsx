@@ -17,8 +17,14 @@ const body = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "Food Culture & Aesthetic",
-  description: "Food Culture & Aesthetic — hệ thống quản lý học phần",
+  title: "F&B-FCA",
+  description: "F&B-FCA — hệ thống quản lý học phần",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
 };
 
 export default function RootLayout({

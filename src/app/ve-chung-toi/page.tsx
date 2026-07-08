@@ -4,9 +4,9 @@ import SiteFooter from "../_components/SiteFooter";
 const DISPLAY = "var(--font-display)";
 
 export const metadata = {
-  title: "Về chúng tôi · About · Food Culture & Aesthetic",
+  title: "Về chúng tôi · About · F&B-FCA",
   description:
-    "Food Culture & Aesthetic (FCA-2026) — học phần đọc văn hóa qua ẩm thực và thiết kế trải nghiệm bàn ăn. About the programme, our approach and values.",
+    "F&B-FCA — học phần đọc văn hóa qua ẩm thực và thiết kế trải nghiệm bàn ăn. About the programme, our approach and values.",
 };
 
 const VALUES = [
@@ -39,10 +39,10 @@ export default function AboutPage() {
         <h2 style={{ fontFamily: DISPLAY, fontSize: 34, fontWeight: 500, margin: "0 0 6px" }}>Our mission</h2>
         <div style={{ fontFamily: DISPLAY, fontStyle: "italic", fontSize: 18, color: "#C9A24A", marginBottom: 22 }}>Sứ mệnh của chúng tôi</div>
         <p style={{ fontSize: 17, lineHeight: 1.8, color: "#D5DFDA", margin: "0 0 18px" }}>
-          Food Culture &amp; Aesthetic is a university course that treats gastronomy as a language. Across fourteen lessons and three modules, students learn to read the culture behind a cuisine and to design dining experiences with intention — from the plate to the room.
+          F&amp;B-FCA is a university course that treats gastronomy as a language. Across fourteen lessons and three modules, students learn to read the culture behind a cuisine and to design dining experiences with intention — from the plate to the room.
         </p>
         <p style={{ fontSize: 15, lineHeight: 1.8, color: "#96A8A1", margin: 0 }}>
-          Food Culture &amp; Aesthetic là học phần đại học xem ẩm thực như một ngôn ngữ. Qua 14 bài học và 3 học phần, sinh viên học cách đọc văn hóa phía sau một nền ẩm thực và thiết kế trải nghiệm bàn ăn có chủ đích — từ chiếc đĩa đến không gian.
+          F&amp;B-FCA là học phần đại học xem ẩm thực như một ngôn ngữ. Qua 14 bài học và 3 học phần, sinh viên học cách đọc văn hóa phía sau một nền ẩm thực và thiết kế trải nghiệm bàn ăn có chủ đích — từ chiếc đĩa đến không gian.
         </p>
       </section>
 

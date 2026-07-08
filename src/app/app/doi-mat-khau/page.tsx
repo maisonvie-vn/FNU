@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ChangePasswordForm from "./change-password-form";
 
-export const metadata = { title: "Đổi mật khẩu · Food Culture & Aesthetic" };
+export const metadata = { title: "Đổi mật khẩu · F&B-FCA" };
 export const dynamic = "force-dynamic";
 
 export default async function ChangePasswordPage() {
@@ -23,7 +23,7 @@ export default async function ChangePasswordPage() {
     <main className="mx-auto w-full max-w-md px-6 py-10">
       <header className="mb-8 flex items-start justify-between gap-4 border-b border-gold/20 pb-6">
         <div>
-          <p className="eyebrow">Food Culture &amp; Aesthetic</p>
+          <p className="eyebrow">F&amp;B-FCA</p>
           <h1 className="mt-1 font-display text-4xl text-cream">Đổi mật khẩu</h1>
         </div>
         <Link

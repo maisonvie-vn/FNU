@@ -25,11 +25,11 @@ export const POSTS: Post[] = [
     slug: "vi-sao-nen-hoc-food-culture-aesthetic-2026",
     date: "2026-06-15",
     focusKeyword: "học food culture",
-    seoTitle: "Vì sao nên học Food Culture & Aesthetic 2026",
+    seoTitle: "Vì sao nên học F&B-FCA 2026",
     metaDescription:
-      "Học food culture giúp bạn đọc văn hóa qua ẩm thực và thiết kế trải nghiệm bàn ăn. Khám phá lý do nên chọn học phần Food Culture & Aesthetic năm 2026.",
-    titleVi: "Vì sao nên học Food Culture & Aesthetic năm 2026?",
-    titleEn: "Why study Food Culture & Aesthetic in 2026?",
+      "Học food culture giúp bạn đọc văn hóa qua ẩm thực và thiết kế trải nghiệm bàn ăn. Khám phá lý do nên chọn học phần F&B-FCA năm 2026.",
+    titleVi: "Vì sao nên học F&B-FCA năm 2026?",
+    titleEn: "Why study F&B-FCA in 2026?",
     excerptVi: "Học food culture không chỉ là nấu ăn — mà là đọc văn hóa, lịch sử và thẩm mỹ ẩn sau mỗi món ăn.",
     excerptEn: "Studying food culture is more than cooking — it is reading the culture, history and aesthetics behind every dish.",
     cover: "https://picsum.photos/seed/fca-blog-1/1200/675",
@@ -40,7 +40,7 @@ export const POSTS: Post[] = [
       { type: "h2", vi: "Ẩm thực là một ngôn ngữ văn hóa", en: "Food is a cultural language" },
       { type: "p", vi: "Mỗi nền ẩm thực kể một câu chuyện về vùng đất, con người và niềm tin. Khi học food culture, bạn học cách giải mã câu chuyện đó — từ nguyên liệu, cách bày biện đến nghi thức bàn ăn.", en: "Every cuisine tells a story of land, people and belief. Studying food culture teaches you to decode that story — from ingredients and plating to dining rituals." },
       { type: "h2", vi: "Sẵn sàng cho ngành F&B 2026", en: "Ready for the 2026 F&B industry" },
-      { type: "p", vi: "Học phần Food Culture & Aesthetic trang bị tư duy hiện đại: AI trong thiết kế dịch vụ, hành vi ăn uống của Gen Z và tính bền vững như một tay nghề — những điều nhà tuyển dụng F&B 2026 đang tìm kiếm.", en: "The Food Culture & Aesthetic course equips you with modern thinking: AI in service design, Gen Z dining behaviour, and sustainability as craft — exactly what 2026 F&B employers are looking for." },
+      { type: "p", vi: "Học phần F&B-FCA trang bị tư duy hiện đại: AI trong thiết kế dịch vụ, hành vi ăn uống của Gen Z và tính bền vững như một tay nghề — những điều nhà tuyển dụng F&B 2026 đang tìm kiếm.", en: "The F&B-FCA course equips you with modern thinking: AI in service design, Gen Z dining behaviour, and sustainability as craft — exactly what 2026 F&B employers are looking for." },
     ],
   },
   {
@@ -62,7 +62,7 @@ export const POSTS: Post[] = [
       { type: "h2", vi: "Vì sao Gen Z yêu thích fine dining", en: "Why Gen Z loves fine dining" },
       { type: "p", vi: "Gen Z tìm kiếm trải nghiệm đáng chia sẻ và có ý nghĩa. Fine dining đáp ứng cả hai: câu chuyện văn hóa phía sau món ăn và tính thẩm mỹ để lưu giữ khoảnh khắc.", en: "Gen Z seeks experiences that are shareable and meaningful. Fine dining delivers both: the cultural story behind the food and the aesthetics worth capturing." },
       { type: "h2", vi: "Học cách thiết kế trải nghiệm fine dining", en: "Learn to design the fine-dining experience" },
-      { type: "p", vi: "Tại Food Culture & Aesthetic, sinh viên thực hành thiết kế trải nghiệm bàn ăn — từ bố cục đĩa, trình tự cảm giác đến không gian phục vụ — với đồ án tốt nghiệp là một concept fine dining hoàn chỉnh.", en: "At Food Culture & Aesthetic, students practise designing dining experiences — from plate composition and sensory sequencing to service space — culminating in a complete fine-dining concept as their capstone." },
+      { type: "p", vi: "Tại F&B-FCA, sinh viên thực hành thiết kế trải nghiệm bàn ăn — từ bố cục đĩa, trình tự cảm giác đến không gian phục vụ — với đồ án tốt nghiệp là một concept fine dining hoàn chỉnh.", en: "At F&B-FCA, students practise designing dining experiences — from plate composition and sensory sequencing to service space — culminating in a complete fine-dining concept as their capstone." },
     ],
   },
   {

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { markAttendance, markAllPresent } from "./actions";
 
-export const metadata = { title: "Điểm danh · Food Culture & Aesthetic" };
+export const metadata = { title: "Điểm danh · F&B-FCA" };
 export const dynamic = "force-dynamic";
 
 const STATUSES: { key: string; label: string; on: string }[] = [
@@ -56,10 +56,10 @@ export default async function AttendancePage({
   const statusOf = new Map((attRes.data || []).map((a) => [a.student_id, a.status]));
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-6 py-10">
+    <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
       <header className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-gold/20 pb-6">
         <div>
-          <p className="eyebrow">Food Culture &amp; Aesthetic</p>
+          <p className="eyebrow">F&amp;B-FCA</p>
           <h1 className="mt-1 font-display text-4xl text-cream">Điểm danh</h1>
         </div>
         <div className="flex gap-3">

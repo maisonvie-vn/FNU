@@ -34,7 +34,7 @@ export async function generateMetadata({
       url,
       publishedTime: post.date,
       images: [{ url: post.cover, alt: post.coverAlt }],
-      siteName: "Food Culture & Aesthetic",
+      siteName: "F&B-FCA",
     },
     twitter: {
       card: "summary_large_image",
@@ -68,10 +68,10 @@ export default async function BlogPost({
     dateModified: post.date,
     keywords: post.focusKeyword,
     inLanguage: "vi-VN",
-    author: { "@type": "Organization", name: "Food Culture & Aesthetic" },
+    author: { "@type": "Organization", name: "F&B-FCA" },
     publisher: {
       "@type": "Organization",
-      name: "Food Culture & Aesthetic",
+      name: "F&B-FCA",
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE}/blog/${post.slug}` },
   };

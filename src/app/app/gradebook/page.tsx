@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { upsertGrade } from "./actions";
 
-export const metadata = { title: "Bảng điểm · Food Culture & Aesthetic" };
+export const metadata = { title: "Bảng điểm · F&B-FCA" };
 export const dynamic = "force-dynamic";
 
 const round1 = (n: number) => Math.round(n * 10) / 10;
@@ -73,7 +73,7 @@ export default async function GradebookPage() {
   });
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-6 py-10">
+    <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
       <Header count={students.length} />
       <div className="overflow-x-auto rounded-xl border border-gold/20">
         <table className="w-full min-w-[760px] text-sm">
@@ -125,7 +125,7 @@ function Header({ count }: { count: number }) {
   return (
     <header className="mb-8 flex flex-wrap items-start justify-between gap-4 border-b border-gold/20 pb-6">
       <div>
-        <p className="eyebrow">Food Culture &amp; Aesthetic</p>
+        <p className="eyebrow">F&amp;B-FCA</p>
         <h1 className="mt-1 font-display text-4xl text-cream">Bảng điểm <span className="text-sage">({count} sinh viên)</span></h1>
       </div>
       <div className="flex gap-3">

@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatVND } from "@/lib/vietqr";
 import { markPaid } from "./actions";
 
-export const metadata = { title: "Thanh toán · Food Culture & Aesthetic" };
+export const metadata = { title: "Thanh toán · F&B-FCA" };
 export const dynamic = "force-dynamic";
 
 type Payment = {
@@ -33,10 +33,10 @@ export default async function PaymentsPage() {
   const collected = list.filter((p) => p.status === "paid").reduce((s, p) => s + p.amount, 0);
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-6 py-10">
+    <main className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
       <header className="mb-8 flex flex-wrap items-start justify-between gap-4 border-b border-gold/20 pb-6">
         <div>
-          <p className="eyebrow">Food Culture &amp; Aesthetic</p>
+          <p className="eyebrow">F&amp;B-FCA</p>
           <h1 className="mt-1 font-display text-4xl text-cream">Thanh toán học phí</h1>
           <p className="mt-1 text-sm text-sage">{pending} chờ thu · đã thu {formatVND(collected)}</p>
         </div>

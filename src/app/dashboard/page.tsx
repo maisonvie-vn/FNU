@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "../login/actions";
 
-export const metadata = { title: "Tổng quan · Food Culture & Aesthetic" };
+export const metadata = { title: "Tổng quan · F&B-FCA" };
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -21,10 +21,10 @@ export default async function DashboardPage() {
     .single();
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-6 py-10">
+    <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
       <header className="mb-10 flex items-start justify-between border-b border-gold/20 pb-6">
         <div>
-          <p className="eyebrow">Food Culture &amp; Aesthetic</p>
+          <p className="eyebrow">F&amp;B-FCA</p>
           <h1 className="mt-1 font-display text-4xl text-cream">
             Dashboard <span className="text-sage">(Tổng quan)</span>
           </h1>

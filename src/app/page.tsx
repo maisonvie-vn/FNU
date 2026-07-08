@@ -5,9 +5,9 @@ import SiteNav from "./_components/SiteNav";
 import SiteFooter from "./_components/SiteFooter";
 
 export const metadata = {
-  title: "Food Culture & Aesthetic — FCA-2026",
+  title: "F&B-FCA",
   description:
-    "Học phần Food Culture & Aesthetic. Read culture through food, design the dining experience.",
+    "Học phần F&B-FCA. Read culture through food, design the dining experience.",
 };
 
 const DISPLAY = "var(--font-display)";

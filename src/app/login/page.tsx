@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import LoginForm from "./login-form";
 
-export const metadata = { title: "Đăng nhập · Food Culture & Aesthetic" };
+export const metadata = { title: "Đăng nhập · F&B-FCA" };
 
 export default function LoginPage() {
   return (
@@ -10,9 +10,7 @@ export default function LoginPage() {
         {/* Thương hiệu */}
         <div className="mb-8 text-center">
           <h1 className="font-display text-3xl font-semibold leading-tight text-gold">
-            Food Culture
-            <br />
-            <span className="italic">&amp; Aesthetic</span>
+            F<span className="italic">&amp;</span>B-FCA
           </h1>
         </div>
 

@@ -8,7 +8,7 @@ import {
   ACCOUNT_NAME,
 } from "@/lib/vietqr";
 
-export const metadata = { title: "Thanh toán học phí · Food Culture & Aesthetic" };
+export const metadata = { title: "Thanh toán học phí · F&B-FCA" };
 export const dynamic = "force-dynamic";
 
 export default async function PaymentPage({
@@ -39,7 +39,7 @@ export default async function PaymentPage({
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center px-6 py-12">
       <div className="mb-8 text-center">
-        <h1 className="font-display text-3xl text-gold">Food Culture <span className="italic">&amp; Aesthetic</span></h1>
+        <h1 className="font-display text-3xl text-gold">F<span className="italic">&amp;</span>B-FCA</h1>
         <p className="eyebrow mt-2">Thanh toán học phí · Tuition</p>
       </div>
 

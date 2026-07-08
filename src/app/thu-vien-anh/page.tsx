@@ -5,9 +5,9 @@ import Gallery from "./Gallery";
 const DISPLAY = "var(--font-display)";
 
 export const metadata = {
-  title: "Thư viện ảnh · Gallery · Food Culture & Aesthetic",
+  title: "Thư viện ảnh · Gallery · F&B-FCA",
   description:
-    "Thư viện ảnh học phần Food Culture & Aesthetic — hình ảnh các lớp học, studio trình bày, phục vụ fine-dining và trình diễn tốt nghiệp. Photo gallery by class.",
+    "Thư viện ảnh học phần F&B-FCA — hình ảnh các lớp học, studio trình bày, phục vụ fine-dining và trình diễn tốt nghiệp. Photo gallery by class.",
 };
 
 export default function GalleryPage() {

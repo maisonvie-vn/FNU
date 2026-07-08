@@ -57,5 +57,20 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Tài khoản GIÁM SÁT (monitor): chỉ được vào Học viên + Điểm danh (+ đổi mật khẩu)
+  if (user && (path === "/app" || path.startsWith("/app/"))) {
+    const { data: prof } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+    if (prof?.role === "monitor") {
+      const allowed = ["/app/students", "/app/attendance", "/app/doi-mat-khau"];
+      const ok = allowed.some((a) => path === a || path.startsWith(a + "/"));
+      if (!ok) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/app/students";
+        url.search = "";
+        return NextResponse.redirect(url);
+      }
+    }
+  }
+
   return response;
 }

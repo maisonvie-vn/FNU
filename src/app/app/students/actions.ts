@@ -10,7 +10,15 @@ async function requireStaff() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Chưa đăng nhập");
-  return supabase;
+  const { data: prof } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  return { supabase, role: prof?.role ?? null };
+}
+
+// Chặn tài khoản giám sát khỏi các thao tác xóa / nhập hàng loạt
+async function requireManager() {
+  const ctx = await requireStaff();
+  if (ctx.role === "monitor") throw new Error("Tài khoản giám sát không có quyền thực hiện thao tác này.");
+  return ctx.supabase;
 }
 
 // ---------- Nhập danh sách từ Excel / CSV ----------
@@ -37,7 +45,12 @@ function parseDob(v: unknown): string | null {
 }
 
 export async function importStudents(_prev: ImportResult, formData: FormData): Promise<ImportResult> {
-  const supabase = await requireStaff();
+  let supabase;
+  try {
+    supabase = await requireManager();
+  } catch {
+    return { error: "Tài khoản giám sát không có quyền nhập danh sách." };
+  }
   const file = formData.get("file") as File | null;
   const defaultCohort = String(formData.get("cohort") || "F-NU-10").trim() || "F-NU-10";
   if (!file || file.size === 0) return { error: "Vui lòng chọn tệp .xlsx hoặc .csv." };
@@ -133,7 +146,7 @@ export async function importStudents(_prev: ImportResult, formData: FormData): P
 export async function withdrawStudent(formData: FormData) {
   const id = String(formData.get("id") || "");
   if (!id) return;
-  const supabase = await requireStaff();
+  const supabase = await requireManager(); // giám sát không được xóa
   await supabase.from("enrollments").update({ status: "withdrawn" }).eq("id", id);
   revalidatePath("/app/students");
 }
@@ -142,17 +155,17 @@ export async function withdrawStudent(formData: FormData) {
 export async function reactivateStudent(formData: FormData) {
   const id = String(formData.get("id") || "");
   if (!id) return;
-  const supabase = await requireStaff();
+  const supabase = await requireManager();
   await supabase.from("enrollments").update({ status: "active" }).eq("id", id);
   revalidatePath("/app/students");
 }
 
-// Chuyển sinh viên sang khóa/lớp khác (bảo lưu)
+// Chuyển sinh viên sang khóa/lớp khác (bảo lưu) — sửa đổi, giám sát được phép
 export async function moveCohort(formData: FormData) {
   const id = String(formData.get("id") || "");
   const cohort = String(formData.get("cohort") || "").trim();
   if (!id || !cohort) return;
-  const supabase = await requireStaff();
+  const { supabase } = await requireStaff();
   await supabase.from("enrollments").update({ cohort }).eq("id", id);
   revalidatePath("/app/students");
 }

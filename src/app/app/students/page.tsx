@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getMyRole } from "@/lib/role";
 import { formatVND } from "@/lib/vietqr";
 import { MoveCohortForm, WithdrawButton, ReactivateButton } from "./RowActions";
 import ImportPanel from "./ImportPanel";
@@ -37,6 +38,8 @@ export default async function StudentsPage({
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
+  const role = await getMyRole();
+  const monitor = role === "monitor"; // giám sát: xem + sửa, KHÔNG xóa/nhập
 
   let query = supabase
     .from("enrollments")
@@ -71,7 +74,7 @@ export default async function StudentsPage({
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <ImportPanel cohorts={cohorts} />
+          {!monitor && <ImportPanel cohorts={cohorts} />}
           <a
             href={`/app/students/export?format=xlsx${cohortFilter ? `&cohort=${encodeURIComponent(cohortFilter)}` : ""}`}
             className="h-10 rounded-lg bg-gold px-4 text-sm font-semibold leading-10 text-ink transition hover:bg-gold-soft"
@@ -156,7 +159,9 @@ export default async function StudentsPage({
                         {!withdrawn && (
                           <MoveCohortForm enrollmentId={r.id} currentCohort={r.cohort} knownCohorts={cohorts} />
                         )}
-                        {withdrawn ? (
+                        {monitor ? (
+                          <span className="text-xs text-sage/60">—</span>
+                        ) : withdrawn ? (
                           <ReactivateButton enrollmentId={r.id} />
                         ) : (
                           <WithdrawButton enrollmentId={r.id} studentName={r.students?.full_name || ""} />

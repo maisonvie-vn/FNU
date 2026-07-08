@@ -16,21 +16,28 @@ const NAV = [
   { href: "/app/doi-mat-khau", en: "Password", vi: "Đổi mật khẩu", icon: "⚿" },
 ];
 
-export default function AppSidebar() {
+// Giám sát chỉ thấy Học viên + Điểm danh (+ Đổi mật khẩu)
+const MONITOR_HREFS = ["/app/students", "/app/attendance", "/app/doi-mat-khau"];
+
+export default function AppSidebar({ role }: { role?: string | null }) {
   const pathname = usePathname();
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname === href || pathname.startsWith(href + "/");
 
+  const monitor = role === "monitor";
+  const nav = monitor ? NAV.filter((l) => MONITOR_HREFS.includes(l.href)) : NAV;
+  const homeHref = monitor ? "/app/students" : "/app";
+
   return (
     <aside className="shrink-0 border-b border-gold/20 bg-ink-deep md:min-h-screen md:w-56 md:border-b-0 md:border-r">
       <div className="hidden px-5 pt-5 md:block">
-        <Link href="/app" className="font-display text-xl font-semibold text-gold">
+        <Link href={homeHref} className="font-display text-xl font-semibold text-gold">
           F<span className="italic font-normal">&amp;</span>B-FCA
         </Link>
-        <div className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-sage">CRM · Quản trị</div>
+        <div className="mt-0.5 text-[10px] uppercase tracking-[0.2em] text-sage">{monitor ? "Giám sát" : "CRM · Quản trị"}</div>
       </div>
       <nav className="flex gap-1 overflow-x-auto p-2 md:flex-col md:gap-0.5 md:overflow-visible md:p-3">
-        {NAV.map((l) => {
+        {nav.map((l) => {
           const active = isActive(l.href, l.exact);
           return (
             <Link

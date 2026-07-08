@@ -36,8 +36,7 @@ export default async function AppPage() {
 
   const quick = [
     { href: "/app/leads", vi: "Duyệt ghi danh", en: "Review enrollment" },
-    { href: "/app/attendance", vi: "Điểm danh", en: "Take attendance" },
-    { href: "/app/gradebook", vi: "Nhập điểm", en: "Enter grades" },
+    { href: "/app/attendance", vi: "Điểm danh & nhập điểm", en: "Attendance & grades" },
     { href: "/app/quizzes", vi: "Soạn đề thi", en: "Build a quiz" },
     { href: "/app/appointments", vi: "Mở khung giờ", en: "Open time slots" },
   ];

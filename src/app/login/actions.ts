@@ -34,7 +34,9 @@ export async function login(
     return { error: "Tên đăng nhập hoặc mật khẩu không đúng." };
   }
 
-  redirect(next.startsWith("/") ? next : "/dashboard");
+  // Chỉ cho phép đường dẫn nội bộ; chặn "//evil.com" và "/\evil.com" (open redirect)
+  const safeNext = /^\/(?![/\\])/.test(next) ? next : "/app";
+  redirect(safeNext);
 }
 
 export async function logout() {

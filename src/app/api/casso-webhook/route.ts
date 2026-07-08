@@ -44,28 +44,35 @@ export async function POST(req: NextRequest) {
 
   const admin = createAdminClient();
 
-  // Lấy các khoản đang chờ thu để đối chiếu
-  const { data: pending } = await admin
+  // Lấy các khoản đang chờ thu để đối chiếu (bỏ khoản thiếu mã CK để không lỗi cả lô)
+  const { data: pendingRaw } = await admin
     .from("payments")
     .select("id, amount, transfer_code, enrollment_id, status")
     .eq("status", "pending");
+  const pending = (pendingRaw || []).filter((x) => x.transfer_code);
 
   let matched = 0;
+  const usedPaymentIds = new Set<string>();
   for (const txn of txns) {
     const desc = norm(String(txn.description || ""));
     const amount = Number(txn.amount || 0);
     if (amount <= 0) continue;
 
-    // Chỉ khớp giao dịch TIỀN VÀO (amount > 0), tìm payment có mã CK nằm trong nội dung
-    const p = (pending || []).find(
-      (x) => desc.includes(norm(x.transfer_code)) && amount >= x.amount,
+    // Chỉ khớp giao dịch TIỀN VÀO, mỗi khoản chờ chỉ khớp 1 lần (chống thu/gửi email trùng)
+    const p = pending.find(
+      (x) => !usedPaymentIds.has(x.id) && desc.includes(norm(x.transfer_code)) && amount >= x.amount,
     );
     if (!p) continue;
+    usedPaymentIds.add(p.id);
 
-    await admin
+    // Chỉ đánh dấu nếu còn đang chờ (nguyên tử) — tránh double nếu chạy song song
+    const { data: upd } = await admin
       .from("payments")
       .update({ status: "paid", paid_at: new Date().toISOString(), raw_txn: txn as object })
-      .eq("id", p.id);
+      .eq("id", p.id)
+      .eq("status", "pending")
+      .select("id");
+    if (!upd || upd.length === 0) continue;
     matched++;
 
     // Gửi email biên nhận cho học viên (không chặn nếu lỗi)

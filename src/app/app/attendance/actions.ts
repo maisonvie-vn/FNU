@@ -1,16 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-
-async function requireStaff() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Chưa đăng nhập");
-  return supabase;
-}
+import { requireStaff } from "@/lib/guard";
 
 // Điểm danh 1 sinh viên cho 1 buổi
 export async function markAttendance(formData: FormData) {
@@ -51,10 +42,17 @@ export async function markAllPresent(formData: FormData) {
   const session_id = String(formData.get("session_id") || "");
   if (!session_id) return;
   const supabase = await requireStaff();
-  const { data: students } = await supabase.from("students").select("id");
-  if (students?.length) {
+  // CHỈ điểm danh cho SV đang học (loại người đã nghỉ / không thuộc lớp)
+  const { data: enr } = await supabase
+    .from("enrollments")
+    .select("students(id)")
+    .neq("status", "withdrawn");
+  const ids = (enr || [])
+    .map((e) => (e as unknown as { students: { id: string } | null }).students?.id)
+    .filter(Boolean) as string[];
+  if (ids.length) {
     await supabase.from("attendance").upsert(
-      students.map((s) => ({ student_id: s.id, session_id, status: "present" })),
+      ids.map((id) => ({ student_id: id, session_id, status: "present" })),
       { onConflict: "student_id,session_id" },
     );
   }

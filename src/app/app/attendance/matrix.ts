@@ -37,19 +37,21 @@ export async function loadMatrix(
   if (sessRes.error) return { error: sessRes.error.message };
 
   const sessions = (sessRes.data || []) as MatrixSession[];
-  const totalSessions = sessions.length || 15;
 
   type SL = { id: string; student_code: string | null; full_name: string };
   const students = ((enrRes.data || []).map((e) => e.students).filter(Boolean) as unknown as SL[]).sort(
     (a, b) => (a.student_code || "").localeCompare(b.student_code || ""),
   );
 
-  // map[student_id][session_id] = status
+  // map[student_id][session_id] = status; đồng thời ghi nhận buổi ĐÃ điểm danh
   const attMap = new Map<string, Map<string, string>>();
+  const heldSet = new Set<string>();
   for (const a of (attRes.data || []) as { student_id: string; session_id: string; status: string }[]) {
     if (!attMap.has(a.student_id)) attMap.set(a.student_id, new Map());
     attMap.get(a.student_id)!.set(a.session_id, a.status);
+    heldSet.add(a.session_id);
   }
+  const heldSessions = heldSet.size; // số buổi đã có điểm danh (đã diễn ra)
   const grMap = new Map(
     ((grRes.data || []) as { student_id: string; diligence: number | null; major_fit: number | null }[]).map((g) => [
       g.student_id,
@@ -68,8 +70,9 @@ export async function loadMatrix(
       else if (st === "absent") absent++;
       return st;
     });
-    const denom = Math.max(1, totalSessions - excused);
-    const attendance100 = Math.min(100, r0(((present + late * 0.5) / denom) * 100));
+    // Mẫu số = số buổi ĐÃ điểm danh (trừ buổi xin phép), không phải tổng 15 buổi
+    const denom = Math.max(1, heldSessions - excused);
+    const attendance100 = heldSessions === 0 ? 0 : Math.min(100, r0(((present + late * 0.5) / denom) * 100));
     const g = grMap.get(s.id);
     const diligence = g?.diligence != null ? Number(g.diligence) : null;
     const major_fit = g?.major_fit != null ? Number(g.major_fit) : null;

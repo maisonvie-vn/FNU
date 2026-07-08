@@ -1,8 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// Các tiền tố đường dẫn yêu cầu đăng nhập (khu vực CRM của giảng viên)
-const PROTECTED_PREFIXES = ["/app", "/dashboard", "/attendance", "/gradebook", "/assessments", "/leads", "/students", "/settings", "/appointments"];
+// Các tiền tố đường dẫn yêu cầu đăng nhập (toàn bộ khu CRM nằm dưới /app)
+const PROTECTED_PREFIXES = ["/app", "/dashboard"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });

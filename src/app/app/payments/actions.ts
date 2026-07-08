@@ -1,34 +1,29 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { requireManager } from "@/lib/guard";
 import { sendPaymentConfirmed } from "@/lib/email";
-
-async function requireStaff() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Chưa đăng nhập");
-  return supabase;
-}
 
 // Xác nhận đã nhận tiền (đối soát thủ công) + gửi email biên nhận cho học viên
 export async function markPaid(formData: FormData) {
   const id = String(formData.get("id") || "");
   if (!id) return;
-  const supabase = await requireStaff();
+  const supabase = await requireManager();
 
   const { data: payment } = await supabase
     .from("payments")
-    .select("amount, transfer_code, enrollment_id")
+    .select("amount, transfer_code, enrollment_id, status")
     .eq("id", id)
     .single();
+
+  // Đã thu rồi thì bỏ qua (tránh gửi biên nhận trùng)
+  if (!payment || payment.status === "paid") return;
 
   await supabase
     .from("payments")
     .update({ status: "paid", paid_at: new Date().toISOString() })
-    .eq("id", id);
+    .eq("id", id)
+    .eq("status", "pending");
 
   if (payment?.enrollment_id) {
     const { data: enr } = await supabase

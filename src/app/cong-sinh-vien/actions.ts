@@ -80,9 +80,9 @@ export async function lookupStudent(
     else if (a.status === "excused") excused++; // xin phép: không tính là vắng
     else absent++;
   }
-  // Nghỉ có phép được loại khỏi mẫu số (không bị trừ điểm chuyên cần)
-  const attDenom = Math.max(1, totalSessions - excused);
-  const attendanceScore = Math.min(10, round1(((present + late * 0.5) / attDenom) * 10));
+  // Mẫu số = số buổi ĐÃ điểm danh của SV (present+late+absent), loại buổi xin phép
+  const attDenom = Math.max(1, present + late + absent);
+  const attendanceScore = (present + late + absent) === 0 ? 0 : Math.min(10, round1(((present + late * 0.5) / attDenom) * 10));
 
   const g = gradeRes.data;
   const coursework = g?.coursework != null ? Number(g.coursework) : null;

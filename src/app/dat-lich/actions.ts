@@ -35,12 +35,16 @@ export async function bookSlot(_prev: BookResult, formData: FormData): Promise<B
     return { error: "Rất tiếc, khung giờ này vừa có người đặt. Vui lòng chọn giờ khác. · This slot was just taken." };
   }
 
-  const { error: updErr } = await admin
+  // Khóa lạc quan THỰC SỰ: chỉ đặt được nếu cập nhật đúng 1 dòng (chưa ai chiếm)
+  const { data: locked, error: updErr } = await admin
     .from("availability_slots")
     .update({ is_booked: true })
     .eq("id", slotId)
-    .eq("is_booked", false);
-  if (updErr) return { error: "Không đặt được, vui lòng thử lại. · Booking failed, please retry." };
+    .eq("is_booked", false)
+    .select("id");
+  if (updErr || !locked || locked.length === 0) {
+    return { error: "Rất tiếc, khung giờ này vừa có người đặt. Vui lòng chọn giờ khác. · This slot was just taken." };
+  }
 
   await admin.from("appointments").insert({
     slot_id: slot.id,

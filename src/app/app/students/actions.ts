@@ -125,7 +125,7 @@ export async function importStudents(_prev: ImportResult, formData: FormData): P
       if (email) patch.email = email;
       if (phone) patch.phone = phone;
       await supabase.from("students").update(patch).eq("id", existing.id);
-      const { data: e } = await supabase.from("enrollments").select("id, status").eq("student_id", existing.id).maybeSingle();
+      const { data: e } = await supabase.from("enrollments").select("id, status").eq("student_id", existing.id).order("created_at", { ascending: false }).limit(1).maybeSingle();
       if (!e) await supabase.from("enrollments").insert({ student_id: existing.id, cohort, status: "active" });
       else if (e.status === "withdrawn") await supabase.from("enrollments").update({ status: "active" }).eq("id", e.id);
       updated++;

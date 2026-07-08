@@ -4,10 +4,13 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
+// Quản lý đề thi: chỉ GV/trợ giảng (chặn giám sát), có xác thực vai trò
 async function requireStaff() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Chưa đăng nhập");
+  const { data: prof } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  if (!["instructor", "assistant"].includes((prof?.role as string) ?? "")) throw new Error("Không có quyền.");
   return { supabase, user };
 }
 

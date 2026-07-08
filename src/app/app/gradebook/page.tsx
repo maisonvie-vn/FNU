@@ -72,9 +72,105 @@ export default async function GradebookPage() {
     return { s, attendance, coursework, final, total, status };
   });
 
+  // ----- Tổng quan điểm lớp -----
+  const graded = rows.filter((r) => r.total != null);
+  const avg = (arr: number[]) => (arr.length ? round1(arr.reduce((a, b) => a + b, 0) / arr.length) : null);
+  const avgTotal = avg(graded.map((r) => r.total as number));
+  const avgAtt = avg(rows.map((r) => r.attendance));
+  const avgCw = avg(rows.filter((r) => r.coursework != null).map((r) => r.coursework as number));
+  const avgFn = avg(rows.filter((r) => r.final != null).map((r) => r.final as number));
+  const cPass = rows.filter((r) => r.status.label === "ĐẠT").length;
+  const cFail = rows.filter((r) => r.status.label === "KHÔNG ĐẠT").length;
+  const cBar = rows.filter((r) => r.status.label === "CẤM THI").length;
+  const cNone = rows.filter((r) => r.status.label === "—").length;
+
+  const buckets = [
+    { label: "Giỏi", sub: "8.0–10", color: "#7FB595", n: graded.filter((r) => (r.total as number) >= 8).length },
+    { label: "Khá", sub: "6.5–7.9", color: "#C9A24A", n: graded.filter((r) => (r.total as number) >= 6.5 && (r.total as number) < 8).length },
+    { label: "Trung bình", sub: "5.0–6.4", color: "#A8884E", n: graded.filter((r) => (r.total as number) >= 5 && (r.total as number) < 6.5).length },
+    { label: "Yếu", sub: "4.0–4.9", color: "#c98a4e", n: graded.filter((r) => (r.total as number) >= 4 && (r.total as number) < 5).length },
+    { label: "Kém", sub: "< 4.0", color: "#D98A7E", n: graded.filter((r) => (r.total as number) < 4).length },
+  ];
+  const maxB = Math.max(1, ...buckets.map((b) => b.n));
+
+  const stats = [
+    { label: "Sĩ số lớp", en: "Class size", value: students.length, color: "#C9A24A" },
+    { label: "Điểm TB lớp", en: "Class average", value: avgTotal ?? "—", color: "#E2CD96" },
+    { label: "Đạt", en: "Passed", value: cPass, color: "#7FB595" },
+    { label: "Chưa đạt / Cấm thi", en: "Failed / barred", value: cFail + cBar, color: "#D98A7E" },
+  ];
+  const comps = [
+    { label: "Chuyên cần", en: "Attendance", w: "10%", v: avgAtt, color: "#7FB595" },
+    { label: "Quá trình", en: "Coursework", w: "30%", v: avgCw, color: "#C9A24A" },
+    { label: "Cuối kỳ", en: "Final", w: "60%", v: avgFn, color: "#E2CD96" },
+  ];
+
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
       <Header count={students.length} />
+
+      {/* Tổng quan điểm lớp */}
+      <section className="mb-8">
+        <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {stats.map((s) => (
+            <div key={s.label} className="rounded-2xl border border-gold/20 bg-ink-deep/40 p-4">
+              <div className="font-display text-3xl sm:text-4xl" style={{ color: s.color }}>{s.value}</div>
+              <div className="mt-1 text-sm font-medium text-cream">{s.label}</div>
+              <div className="text-xs text-sage">{s.en}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          {/* Phân bố xếp loại */}
+          <div className="rounded-2xl border border-gold/20 bg-ink-deep/40 p-5">
+            <div className="mb-4 flex items-baseline justify-between">
+              <h2 className="font-display text-xl text-cream">Phân bố xếp loại</h2>
+              <span className="text-xs text-sage">{graded.length}/{students.length} đã có điểm{cNone ? ` · ${cNone} chưa chấm` : ""}</span>
+            </div>
+            <div className="space-y-2.5">
+              {buckets.map((b) => (
+                <div key={b.label} className="flex items-center gap-3">
+                  <div className="w-24 shrink-0 text-right">
+                    <div className="text-sm text-cream">{b.label}</div>
+                    <div className="text-[10px] text-sage">{b.sub}</div>
+                  </div>
+                  <div className="h-6 flex-1 overflow-hidden rounded-md bg-ink/60">
+                    <div className="flex h-full items-center rounded-md pl-2 text-xs font-semibold text-ink transition-all" style={{ width: `${Math.max(b.n ? 12 : 0, (b.n / maxB) * 100)}%`, background: b.color }}>
+                      {b.n > 0 ? b.n : ""}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Trung bình theo cấu phần điểm */}
+          <div className="rounded-2xl border border-gold/20 bg-ink-deep/40 p-5">
+            <div className="mb-4 flex items-baseline justify-between">
+              <h2 className="font-display text-xl text-cream">Điểm trung bình theo cấu phần</h2>
+              <span className="text-xs text-sage">thang 10</span>
+            </div>
+            <div className="space-y-4">
+              {comps.map((c) => (
+                <div key={c.label}>
+                  <div className="mb-1 flex items-baseline justify-between text-sm">
+                    <span className="text-cream">{c.label} <span className="text-xs text-sage">· {c.en} · {c.w}</span></span>
+                    <span className="font-display text-lg" style={{ color: c.color }}>{c.v ?? "—"}</span>
+                  </div>
+                  <div className="h-2.5 overflow-hidden rounded-full bg-ink/60">
+                    <div className="h-full rounded-full" style={{ width: `${((c.v ?? 0) / 10) * 100}%`, background: c.color }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-[11px] leading-relaxed text-sage">
+              Tổng kết = Chuyên cần×10% + Quá trình×30% + Cuối kỳ×60%. Đạt khi ≥ 4.0; vắng quá 20% → cấm thi.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <div className="overflow-x-auto rounded-xl border border-gold/20">
         <table className="w-full min-w-[760px] text-sm">
           <thead>

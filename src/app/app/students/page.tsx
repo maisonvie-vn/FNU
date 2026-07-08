@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatVND } from "@/lib/vietqr";
 import { MoveCohortForm, WithdrawButton, ReactivateButton } from "./RowActions";
+import ImportPanel from "./ImportPanel";
 
 export const metadata = { title: "Danh sách học viên · F&B-FCA" };
 export const dynamic = "force-dynamic";
@@ -69,16 +70,20 @@ export default async function StudentsPage({
             </p>
           )}
         </div>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <ImportPanel cohorts={cohorts} />
           <a
-            href={`/app/students/export${cohortFilter ? `?cohort=${encodeURIComponent(cohortFilter)}` : ""}`}
+            href={`/app/students/export?format=xlsx${cohortFilter ? `&cohort=${encodeURIComponent(cohortFilter)}` : ""}`}
             className="h-10 rounded-lg bg-gold px-4 text-sm font-semibold leading-10 text-ink transition hover:bg-gold-soft"
           >
-            Xuất CSV ↓
+            Xuất Excel ↓
           </a>
-          <Link href="/app" className="h-10 rounded-lg border border-gold/30 px-4 text-sm leading-10 text-mist transition hover:border-gold hover:text-gold">
-            ← Giao diện chính
-          </Link>
+          <a
+            href={`/app/students/export${cohortFilter ? `?cohort=${encodeURIComponent(cohortFilter)}` : ""}`}
+            className="h-10 rounded-lg border border-gold/30 px-4 text-sm leading-10 text-gold transition hover:border-gold"
+          >
+            CSV
+          </a>
         </div>
       </header>
 

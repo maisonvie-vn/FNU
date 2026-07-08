@@ -6,6 +6,7 @@ const NAV = [
   { href: "/ve-chung-toi", en: "About us", vi: "Về chúng tôi" },
   { href: "/thu-vien-anh", en: "Gallery", vi: "Thư viện ảnh" },
   { href: "/blog", en: "Blog", vi: "Tin tức" },
+  { href: "/cong-sinh-vien", en: "Student portal", vi: "Cổng sinh viên" },
   { href: "/#curriculum", en: "Curriculum", vi: "Chương trình" },
   { href: "/#faq", en: "FAQ", vi: "Hỏi đáp" },
   { href: "/#enroll", en: "Enroll", vi: "Ghi danh" },

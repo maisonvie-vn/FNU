@@ -7,7 +7,7 @@ const LINKS = [
   { href: "/#curriculum", en: "Curriculum", vi: "Chương trình" },
   { href: "/thu-vien-anh", en: "Gallery", vi: "Thư viện ảnh" },
   { href: "/blog", en: "Blog", vi: "Tin tức" },
-  { href: "/#faq", en: "FAQ", vi: "Hỏi đáp" },
+  { href: "/cong-sinh-vien", en: "Portal", vi: "Cổng SV" },
   { href: "/login", en: "Sign in", vi: "GV đăng nhập" },
 ];
 

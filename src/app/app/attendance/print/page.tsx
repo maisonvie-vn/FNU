@@ -36,7 +36,7 @@ export default async function AttendancePrintPage() {
       <AutoPrint />
 
       <div style={{ marginBottom: 12 }}>
-        <div style={{ fontSize: 18, fontWeight: 700, color: "#8a6d2f" }}>F&amp;B-FCA — Lớp F-NU-10</div>
+        <div style={{ fontSize: 18, fontWeight: 700, color: "#8a6d2f" }}>Lớp F-NU-10</div>
         <div style={{ fontSize: 13, fontWeight: 600 }}>Bảng điểm danh &amp; điểm tổng hợp</div>
         <div style={{ fontSize: 11, color: "#555" }}>Sĩ số: {rows.length} · Số buổi: {sessions.length} · Ngày in: {fmtNow()}</div>
       </div>

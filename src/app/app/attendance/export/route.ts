@@ -25,7 +25,9 @@ export async function GET(req: NextRequest) {
   ]);
   const legend = ["Ký hiệu: C = Có mặt · P = Xin phép · T = Trễ · V = Vắng · (trống) = chưa điểm danh"];
 
-  const ws = XLSX.utils.aoa_to_sheet([header, ...body, [], legend]);
+  // Tiêu đề file: chỉ tên lớp (không kèm thương hiệu)
+  const title = ["Lớp F-NU-10 — Bảng điểm danh & điểm tổng hợp"];
+  const ws = XLSX.utils.aoa_to_sheet([title, [], header, ...body, [], legend]);
   ws["!cols"] = [{ wch: 5 }, { wch: 12 }, { wch: 22 }, ...sessions.map(() => ({ wch: 4 })), { wch: 14 }, { wch: 13 }, { wch: 20 }, { wch: 9 }, { wch: 12 }];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Điểm danh & Điểm");
